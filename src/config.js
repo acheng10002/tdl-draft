@@ -10,6 +10,7 @@ const projectsListText = {
     p9: "Project 9"
 }
 
+
 const titles = {
     'projects-title': {
         position: "left",
@@ -19,13 +20,6 @@ const titles = {
         text: "Projects"
 
     },
-    // 'project-title': {
-    //     position: "middle",
-    //     image: "./img/folder-arrow-down.svg",
-    //     alt: "arrow pointing right icon",
-    //     text: projectsListText[1],
-    //     id: "tasks-list-project"
-    // },
     'each-task-title': {
         position: "right",
         image: "./img/calendar-check.svg",
@@ -67,30 +61,6 @@ const newProjectFieldAttributes = {
     id: "add-new-project",
     placeholder: "+ New Project"
 }
-
-
-/* 
-formData = {
-    'person1': {
-        'Name': 'John Doe',
-        'Email': 'john.doe@example.com',
-        'Comment': 'This is a test comment.',
-        'Country': 'USA'
-    },
-    'person2': {
-        'Name': 'Jane Doe',
-        'Email': 'john.doe@example.com',
-        'Comment': 'This is a test comment.',
-        'Country': 'USA'
-    },
-    'person3': {
-        'Name': 'Jack Doe',
-        'Email': 'john.doe@example.com',
-        'Comment': 'This is a test comment.',
-        'Country': 'USA'
-    }
-}
-*/
 
 
 const firstThreeTaskFields = {

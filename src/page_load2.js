@@ -41,6 +41,7 @@ function prepareTitleData(key, item) {
     };     
 }
 
+
 /* utility function that creates HTML elements 
    type is the type of HTML element to be created
    properties is an object containing key-value pairs where keys are property names and 
@@ -134,6 +135,9 @@ function createAndAppendButtons(buttonsData, container) {
 
         container.appendChild(buttonDiv);
     });
+    let newTaskButton = document.getElementById('new-task');
+
+    newTaskButton.addEventListener('click', createNewTask);
 }
 
 
@@ -149,7 +153,6 @@ function createAndAppendProjectsListAndField(projectsListData, listAttributesDat
     // iterates over the projectsListData object
     for (const key in projectsListData) { 
         const projectName = projectsListData[key];
-    // projectsListData.forEach((data, index) => {
 
         // creates an img element and sets its src and alt attributes
         const img = createElement('img', {
@@ -158,19 +161,10 @@ function createAndAppendProjectsListAndField(projectsListData, listAttributesDat
 
         // creates a text node without the need for additional HTML features
         const textNode = document.createTextNode(projectName);
-        // const textNode = document.createTextNode(data);
 
         const projectsDiv = createElement('li', null, img, textNode);
 
         projectsDiv.classList.add(key);
-
-        // projectsDiv.appendChild(img);
-        // projectsDiv.appendChild(textNode);
-
-        // adds an id attribute to the last element in the projectsListData array
-        // if (index === projectsListData.length - 1) {
-        //     projectsDiv.id = "last-li";
-        // }
 
         if (key === lastKey) {
             projectsDiv.id = "last-li";
@@ -202,54 +196,7 @@ function createAndAppendProjectsListAndField(projectsListData, listAttributesDat
 }
    
 
-// a prepareData function
-// function prepareTasksListData(key, item) {
-//     return {
-//         'task-edit': item["task-edit"],
-//         'task-title': item["task-title"],
-//         'task-description': item["task-description"],
-//         'task-duedate': item["task-duedate"],
-//         'priority-level': item["priority-level"],
-//         'status': item["status"]
-//     };
-// }
-
-
-// function prepareTasksTitleAndListData(key, item) {
-//     return {
-//         // classes: ["section", "project-title", item.position],
-//         // imageSrc: item.image,
-//         // imageAlt: item.alt,
-//         // textContent: item.text,
-//         // id: item['id'],
-//         'task-edit': item["task-edit"],
-//         'task-title': item["task-title"],
-//         'task-description': item["task-description"],
-//         'task-duedate': item["task-duedate"],
-//         'priority-level': item["priority-level"],
-//         'status': item["status"]
-//     };
-// }
-
-
 function createAndAppendTasksTitleAndList(projectData, container) {
-    // const titleDiv = createElement('div', {className: data.classes.join(' ')});
-
-    // const img = createElement('img', {
-    //     src: data.imageSrc, 
-    //     alt: data.imageAlt
-    // });
-
-    // const textDiv = createElement('div', {
-    //     textContent: data.textContent,
-    //     id: data.id
-    // });
-
-    // titleDiv.appendChild(img);
-    // titleDiv.appendChild(textDiv);
-
-    // container.appendChild(titleDiv);
-
     const tasksTitleData = projectData['Project'];
     const titleDiv = createElement('div', {className: "section project-title " + tasksTitleData.position});
     const img = createElement('img', {src: tasksTitleData.image, alt: tasksTitleData.alt});
@@ -320,52 +267,13 @@ function createAndAppendTasksTitleAndList(projectData, container) {
         tasksListDiv.appendChild(taskDiv);
     }
     container.appendChild(tasksListDiv);
-}
 
-/*
-function createAndAppendTasksList(tasksData, container) {
-    const tasksListDiv = createElement('div', {className: 'section tasks-list middle'});
+    let taskEditDivs = document.getElementsByClassName('task-edit');
 
-    tasksData.forEach(data => {
-        // creates a div element for "Edit"
-        const taskEditDiv = createElement('div', {
-            className: "task-edit",
-            textContent: "Edit"
-        });
-
-        // creates a div element for "Task Description"
-        const taskDescriptionDiv = createElement('div', {
-            className: Object.keys(data)[0],
-            textContent: data["task-description"]
-        });
-
-        // creates a div element for "Task Due Date" and sets its color class based on the value of its priority-level property 
-        const taskDueDateDiv = createElement('div', {
-            className: `${Object.keys(data)[1]} ${data["priority-level"] === "high" ? "red" : data["priority-level"] === "medium" ? "yellow" : "green"}`,
-            textContent: data["task-duedate"]
-        });
-
-        // creates a div element for "Priority Level", and sets its classes, including hide  
-        const priorityLevelDiv = createElement('div', {
-            className: `${Object.keys(data)[2]} hide`,
-            textContent: data["priority-level"]
-        });
-
-        const taskDiv = createElement('div', {
-            className: 'task'
-        });
-
-        taskDiv.appendChild(taskEditDiv);
-        taskDiv.appendChild(taskDescriptionDiv);
-        taskDiv.appendChild(taskDueDateDiv);
-        taskDiv.appendChild(priorityLevelDiv);
-
-        tasksListDiv.appendChild(taskDiv);
+    Array.from(taskEditDivs).forEach(function(div) {
+        div.addEventListener('click', switchStylesheet)
     });
-
-    container.appendChild(tasksListDiv);
 }
-*/
 
 
 // a prepareData function
@@ -518,6 +426,7 @@ function switchStylesheet() {
     }
 } 
 
+
 function populateFormFields(taskId) {
     const taskDiv = document.getElementById(taskId);
     const taskTitle = taskDiv.querySelector('.task-title').textContent;
@@ -556,6 +465,7 @@ function populateFormFields(taskId) {
     statusSelect.value = taskStatus;
 }
 
+
 function createNewTask() {
     switchStylesheet();
 
@@ -584,7 +494,6 @@ function createNewTask() {
         statusSelect.selectedIndex = 0;
     }
 }
-
 
 
 const Project1 = {
@@ -671,6 +580,7 @@ const Project2 = {
         'status': "Complete"
     }
 }
+
 
 const Project3 = {
     'Project': {
@@ -764,6 +674,7 @@ const Project4 = {
         'status': "In Progress"
     }
 }
+
 
 const Project5 = {
     'Project': {
@@ -869,6 +780,7 @@ const Project7 = {
     }
 }
 
+
 const Project8 = {
     'Project': {
         position: "middle",
@@ -973,4 +885,4 @@ function selectProject(container) {
 }
 
 
-export { prepareDate, createAndAppendDate, prepareObjectData, prepareTitleData, createAndAppendTitles, prepareButtonData, createAndAppendButtons, createAndAppendProjectsListAndField, Project1, Project2, Project3, Project4, Project5, Project6, Project7, Project8, Project9, createAndAppendTasksTitleAndList, prepareThreeTaskFieldsData, preparePriorityTaskFieldData, createAndAppendTaskFields, createAndAppendStatusTaskField, switchStylesheet, createNewTask, selectProject };
+export { prepareDate, createAndAppendDate, prepareObjectData, prepareTitleData, createAndAppendTitles, prepareButtonData, createAndAppendButtons, createAndAppendProjectsListAndField, Project1, createAndAppendTasksTitleAndList, prepareThreeTaskFieldsData, preparePriorityTaskFieldData, createAndAppendTaskFields, createAndAppendStatusTaskField, selectProject };
