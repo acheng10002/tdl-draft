@@ -29,9 +29,9 @@
     padding-left: 3px;
 }
 
+/* .each-task-title, */
 .projects-title, 
-/* .task-title,
-.each-task-title, */
+.task-title,
 .project-title {
     display: flex;
     align-items: flex-end;
@@ -42,8 +42,8 @@
 
 .projects-list {
     grid-area: 3 / 1 / 4 / 2;
-    display: flex;
-    flex-direction: column;
+    /* display: flex;
+    flex-direction: column; */
 }
 
 ul {
@@ -52,12 +52,9 @@ ul {
 }
 
 li {
-<<<<<<< HEAD
-=======
-    display: flex;
+    /* display: flex;
     align-items: center;
-    justify-content: center;
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
+    justify-content: center; */
     height: 4.5vh;
     width: 15vw;
     border-top: 2px dashed #a2a5a6;
@@ -99,11 +96,7 @@ button {
 }
 
 .date {
-<<<<<<< HEAD
     /* grid-area: 1 / 2 / 2 / 3; */
-=======
-    /* grid-area: 1 / 2 / 2 / 3 */
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
     grid-area: 1 / 2 / 2 / 4; 
     align-self: end !important;
     padding-top: 50px;
@@ -113,22 +106,26 @@ button {
 
 .project-title {
     grid-area: 2 / 2 / 3 / 4;
-<<<<<<< HEAD
-=======
-    display: flex;
+    /* display: flex;
     align-items: flex-end;
     justify-content: center;
     padding-bottom: 17px;
-    font-size: 20px; 
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
+    font-size: 20px;  */
+}
+
+.projects-list,
+.tasks-list
+/* .description-field,
+.task-details,
+form */ {
+    display: flex;
+    flex-direction: column;
 }
 
 .tasks-list {
-    /* 3 / 2 / 4 / 3 */
+    /* grid-area: 3 / 2 / 4 / 3 */
     grid-area: 3 / 2 / 4 / 4;
     align-self: stretch;
-    display: flex;
-    flex-direction: column;
     gap: 20px;
     padding-top: 11px;
     font-size: 16px;
@@ -165,10 +162,7 @@ button {
     background-color: rgba(252, 244, 3, 0.5);
 }
 
-<<<<<<< HEAD
 li,
-=======
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
 .task-description,
 .task-duedate,
 .task-edit {
@@ -195,19 +189,13 @@ li,
     padding-top: 3px;
     padding-bottom: 2px;
     border-bottom: 1px solid #a2a5a6;
-    text-align: center;
     font-size: 16px;
 }
 
 .task-duedate {
-<<<<<<< HEAD
     grid-area: 1 / 3 / 3 / 4; 
     height: 8vh;
     width: 5vw;
-=======
-    width: 2.5vw;
-    padding: 9px;
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
     border-left: 1px solid #a2a5a6;
     font-size: 13px;
     overflow-x: hidden;
@@ -227,8 +215,8 @@ li,
 
 button,
 li,
-.task-edit,
-label.priority {
+.task-edit
+/* label.priority */ {
     cursor: pointer;
 }
 
@@ -236,29 +224,11 @@ label.priority {
     display: none;
 }
 
-.task:hover .task-edit {
-    display: flex;
-} 
-
-.task-edit {
-    display: none;
-    height: 8vh;
-    width: 3.25vw;
-    border-right: 1px solid #a2a5a6;
-    margin: 0; 
-    text-align: center;
-    background-color: white;
-}
-
-.hide {
-    display: none;
-}
-
-input[type="date"] {
+/* input[type="date"] {
     font-family: 'Lato', sans-serif;
     font-size: 16px;
     text-align: center;
-}
+} */
 
 .new-task {
     /* grid-area: 4 / 2 / 5 / 3 */

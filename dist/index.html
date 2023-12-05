@@ -1,148 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-<<<<<<< HEAD
     <meta charset="utf-8">
-=======
-    <meta charset="UTF-8">
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Do to Done</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=AR+One+Sans&family=Lato&family=Young+Serif&display=swap" rel="stylesheet">
-<<<<<<< HEAD
+    <link href="https://fonts.googleapis.com/css2?family=AR+One+Sans&family=Lato&family=Young+Serif&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="style2.css">
     <link id="stylesheetToSwitch" rel="stylesheet" href="style2.css">
   </head>
   <body>
-    <div></div>
+    <div id="content"></div>
     <script src="main.js"></script>
-=======
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body id="content">
-    <div class="section projects-title left">
-        <img src="./img/folders-multiple.svg" alt="multiple folders icon"></img>
-        <div class="projects-title-text">Projects</div>
-    </div>
-    <div class="section projects-list left">
-        <ul>
-            <li class="p1"><img src="./img/arrow-right.svg" alt="arrow pointing right">Project 1</li>
-            <li class="p2"><img src="./img/arrow-right.svg" alt="arrow pointing right">Project 2</li>
-            <li class="p3"><img src="./img/arrow-right.svg" alt="arrow pointing right">Project 3</li>
-            <li class="p4"><img src="./img/arrow-right.svg" alt="arrow pointing right">Project 4</li>
-            <li class="p5"><img src="./img/arrow-right.svg" alt="arrow pointing right">Project 5</li>
-            <li class="p6"><img src="./img/arrow-right.svg" alt="arrow pointing right">Project 6</li>
-            <li class="p7"><img src="./img/arrow-right.svg" alt="arrow pointing right">Project 7</li>
-            <li class="p8"><img src="./img/arrow-right.svg" alt="arrow pointing right">Project 8</li>
-            <li class="p9 last-li"><img src="./img/arrow-right.svg" alt="project option">Project 9</li>
-        </ul>
-        <div>
-            <label for="add-new-project"></label>
-            <input type="text" id="add-new-project" placeholder="+ New Project">
-        </div>
-    </div>
-    <div class="section new-project left">
-        <button id="new-project">+ New Project</button>
-    </div>
-    <div class="section date middle">Today, Dec 1, 2023</div>
-    <div class="section project-title middle">
-        <img src="./img/folder-arrow-down.svg" alt="folder arrow down icon"></img>
-        <div id="tasks-list-project">Project 1</div>
-    </div>
-    <div class="section tasks-list middle">
-        <div class="task">
-            <div class="task-edit">Edit</div>
-            <div class="task-title">Task 1 Title</div>
-            <div class="task-description">Diam maecenas ultricies mi eget mauris pharetra et. Aliquam vestibulum morbi blandit cursus risus at ultrices.</div>
-            <div class="task-duedate red">12/06/2023</div>
-            <div class="hide priority-level">high</div>
-            <div class="hide status">In Progress</div>
-        </div>
-        <div class="task">
-            <div class="task-edit">Edit</div>
-            <div class="task-title">Task 2 Title</div>
-            <div class="task-description">In fermentum et sollicitudin ac orci phasellus. Risus feugiat in ante metus dictum.</div>
-            <div class="task-duedate yellow">12/15/2023</div>
-            <div class="hide priority-level">medium</div>
-            <div class="hide status">Complete</div>
-        </div>
-        <div class="task">
-            <div class="task-edit">Edit</div>
-            <div class="task-title">Task 3 Title</div>
-            <div class="task-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</div>
-            <div class="task-duedate yellow">12/18/2023</div>
-            <div class="hide priority-level">medium</div>
-            <div class="hide status">In Progress</div>
-        </div>
-        <div class="task">
-            <div class="task-edit">Edit</div>
-            <div class="task-title">Task 4 Title</div>
-            <div class="task-description">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
-            <div class="task-duedate green">01/04/2024</div>
-            <div class="hide priority-level">low</div>
-            <div class="hide status">Not Started</div>
-        </div>
-        <div class="task">
-            <div class="task-edit">Edit</div>
-            <div class="task-title">Task 5 Title</div>
-            <div class="task-description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</div>
-            <div class="task-duedate red">01/17/2024</div>
-            <div class="hide priority-level">high</div>
-            <div class="hide status">In Progress</div>
-        </div>
-        <div class="task">
-            <div class="task-edit">Edit</div>
-            <div class="task-title">Task 6 Title</div>
-            <div class="task-description">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
-            <div class="task-duedate yellow">01/23/2024</div>
-            <div class="hide priority-level">medium</div>
-            <div class="hide status">Not Started</div>
-        </div>
-    </div>
-    <div class="section new-task middle">
-        <button id="new-task">+ New Task</button>
-    </div>
-    <div class="section each-task-title right">
-        <img src="./img/calendar-check.svg" alt="task icon"></img>
-        <div>Task</div>
-    </div>
-    <div class="section task-details right">
-        <form action="" method="post">
-            <div class="task-field">
-                <label for="each-task" id="each-task-label">Task Title:</label>
-                <input type="text" id="each-task">
-            </div>
-            <div class="duedate-field">
-                <label for="task-duedate" id="task-duedate-label">Task Due Date:</label>
-                <input type="date" id="task-duedate">
-            </div>
-            <div class="description-field">
-                <label for="task-description" id="task-description-label">Task Description:</label>
-                <textarea name="task-textarea" id="task-description"></textarea>
-            </div>
-            <div class="priority-field">
-                <label for="task-priority" id="task-priority-label">Priority:</label>
-                <input type="radio" name="priority" id="high" value="high">
-                <label for="high" class="priority" data-color="red">High</label>
-                <input type="radio" name="priority" id="medium" value="medium">
-                <label for="medium" class="priority" data-color="yellow">Medium</label>
-                <input type="radio" name="priority" id="low" value="low">
-                <label for="low" class="priority" data-color="green">Low</label>
-            </div>
-            <div class="status-field">
-                <label for="status-dropdown" id="task-status-label">Status:</label>
-                <select name="status" id="status-dropdown">
-                    <option id="not-started" value="Not Started">Not Started</option>
-                    <option id="in-progress" value="In Progress">In Progress</option>
-                    <option id="complete" value="Complete">Complete</option>
-                </select>
-            </div>
-        </form>
-    </div>
-    <div class="section save-task right">
-        <button id="save-task">Save</button>
-    </div>
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
   </body>
 </html>

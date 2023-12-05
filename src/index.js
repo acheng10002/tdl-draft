@@ -28,13 +28,13 @@ createAndAppendTaskFields(processedThreeTaskFields, priorityTaskFieldLabel, proc
 
 createAndAppendStatusTaskField(statusTaskField);
 
-var taskEditDivs = document.getElementsByClassName('task-edit');
+let taskEditDivs = document.getElementsByClassName('task-edit');
 
 Array.from(taskEditDivs).forEach(function(div) {
     div.addEventListener('click', switchStylesheet)
 });
 
-var newTaskButton = document.getElementById('new-task');
+let newTaskButton = document.getElementById('new-task');
 
 newTaskButton.addEventListener('click', createNewTask);
 

@@ -29,13 +29,8 @@
     padding-left: 3px;
 }
 
-<<<<<<< HEAD
 .projects-title,
 .task-title,  
-=======
-.projects-title, 
-.task-title,
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
 .each-task-title,
 .project-title {
     display: flex;
@@ -58,13 +53,8 @@ li {
     height: 4.5vh;
     width: 15vw;
     border-top: 2px dashed #a2a5a6;
-<<<<<<< HEAD
     border-right: none;
     border-left: none;
-=======
-    border-left: none;
-    border-right: none;
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
 }
 
 #last-li {
@@ -114,11 +104,7 @@ button {
 }
 
 .projects-list,
-<<<<<<< HEAD
 .tasks-list, 
-=======
-.tasks-list,
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
 .description-field,
 .task-details,
 form {
@@ -142,10 +128,6 @@ form {
 .task {
     display: grid;
     grid: 3.5vh 5vh / 3vw 30vw 5vw;
-<<<<<<< HEAD
-    justify-content: space-between;
-=======
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
     height: 8vh;
     width: 38vw;
     margin: 0 15px 0 15px;
@@ -182,11 +164,7 @@ li,
 .task-edit {
     display: flex;
     align-items: center;
-<<<<<<< HEAD
     justify-content: center;
-=======
-    justify-content: center; 
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
 }
 
 .task-description {
@@ -220,20 +198,12 @@ li,
 }
 
 .task-edit {
-<<<<<<< HEAD
     grid-area: 1 / 1 / 3 / 2;
-=======
-    grid-area: 1 / 1 / 3 / 2; 
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
     height: 8vh;
     width: 3vw;
     border-right: 1px solid #a2a5a6;
     margin: 0; 
-<<<<<<< HEAD
     text-align: center; 
-=======
-    text-align: center;
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
     font-size: 13px;
     background-color: white;
 }
@@ -261,15 +231,9 @@ input[type="date"] {
 }
 
 .each-task-title {
-<<<<<<< HEAD
     grid-area: 1 / 3 / 3 / 4;
     border: 5px outset #adb1b3;
     border-bottom: none;
-=======
-    grid-area: 1 / 3 / 3 / 4; 
-    border: 5px outset #adb1b3;
-    border-bottom: none; 
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
 }
 
 .task-details,
@@ -303,10 +267,7 @@ form {
     height: 2.5vh;
     width: 26vw;
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
 #each-task,
 #task-duedate,  
 select, option {
@@ -348,10 +309,7 @@ input[type="radio"]:checked + label.priority::before {
 
 .priority-field {
     display: flex;
-<<<<<<< HEAD
-=======
     justify-content: space-between;
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
     width: 30.5vw;
     padding-right: 3.5vw;
 }

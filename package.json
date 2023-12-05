@@ -5,17 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-<<<<<<< HEAD
     "watch": "webpack --watch",
-=======
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
     "build": "webpack"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-<<<<<<< HEAD
     "css-loader": "^6.8.1",
     "style-loader": "^3.3.3",
     "webpack": "^5.89.0",
@@ -119,10 +115,8 @@
     "webpack-sources": "^3.2.3",
     "which": "^2.0.2",
     "wildcard": "^2.0.1",
-    "yallist": "^4.0.0"
-=======
+    "yallist": "^4.0.0",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
   }
 }

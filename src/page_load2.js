@@ -564,14 +564,14 @@ function createNewTask() {
         eachTaskField.value = '';
     }
 
-    let descriptionField = document.getElementById('task-description');
-    if (descriptionField) {
-        descriptionField = '';
-    }
-
     let dueDateField = document.getElementById('task-duedate');
     if (dueDateField) {
         dueDateField.value = '';
+    }
+
+    let descriptionField = document.getElementById('task-description');
+    if (descriptionField) {
+        descriptionField.value = '';
     }
 
     let priorityFields = document.getElementsByName('priority');
