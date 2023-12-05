@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { titles, buttons, projectsListText, projectsListAttributes, newProjectFieldAttributes, firstThreeTaskFields, priorityTaskFieldLabel, priorityTaskField, statusTaskField } from './config.js';
 
 import { prepareDate, createAndAppendDate, prepareObjectData, prepareTitleData, createAndAppendTitles, prepareButtonData, createAndAppendButtons, createAndAppendProjectsListAndField, Project1, Project2, Project3, Project4, Project5, Project6, Project7, Project8, Project9, createAndAppendTasksTitleAndList, prepareThreeTaskFieldsData, preparePriorityTaskFieldData, createAndAppendTaskFields, createAndAppendStatusTaskField, switchStylesheet, createNewTask, selectProject } from './page_load2.js';
@@ -79,16 +78,3 @@ const processedOneTaskField = prepareOneTaskFieldData(oneTaskField)
 createAndAppendTaskFields(processedThreeTaskFields, labelTaskField, processedOneTaskField, pageInfo); */
 
 
-
-
-=======
-import { titles } from './config.js';
-
-import { makeTitles } from './page_load.js';
-
-const pageInfo = document.getElementById('content');
-
-const panelTitles = makeTitles(titles);
-
-pageInfo.appendChild(panelTitles);
->>>>>>> 7b4b0240241a8ea82ffd636037c24a07ed5c83ab
