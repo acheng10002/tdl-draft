@@ -1,3 +1,5 @@
+import {projectsListText, Project1, projectMapping} from './config.js'
+
 function prepareDate() {
     return new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric', weekday: 'long' });
 }
@@ -141,7 +143,45 @@ function createAndAppendButtons(buttonsData, container) {
 }
 
 
+// function prepareNewProject() {
+//     const newProjectInput = document.getElementById('add-new-project');
+
+//     const newProjectValue = newProjectInput.value.trim();
+
+//     if (newProjectValue !== '') {
+//         let nextKey = 'p1';
+//         for (let i = 10; i <= 99; i++) {
+//             const keyToCheck = 'p' + i;
+//             if (!projectsListText.hasOwnProperty(keyToCheck)) {
+//                 nextKey = keyToCheck;
+//                 break;
+//             }
+//         }
+    
+//         projectsListText[nextKey] = newProjectValue;
+
+//         updatedProjectsListText = projectsListText;
+
+//         newProjectInput.value = '';
+
+//         return updatedProjectsListText;
+//     }
+// }
+
+
 function createAndAppendProjectsListAndField(projectsListData, listAttributesData, fieldAttributesData, container) {
+    // document.getElementById('add-new-project').addEventListener('keyup', function (event) {
+    //     if (event.key === 'Enter') {
+    //         let updatedProjectsListText = prepareNewProject();
+    //         projectsListData = updatedProjectsListText;
+    //     }
+    // });
+
+    // document.getElementById('new-project').addEventListener('click', function() {
+    //     let updatedProjectsListText = prepareNewProject();
+    //     projectsListData = updatedProjectsListText;
+    // });
+
     // creates a div element and sets it classes
     const listDiv = createElement('div', {className: "section projects-list left"});
 
@@ -194,7 +234,56 @@ function createAndAppendProjectsListAndField(projectsListData, listAttributesDat
 
     container.appendChild(listDiv);
 }
-   
+
+
+// function prepareNewProject() {
+//     const newProjectInput = document.getElementById('add-new-project');
+//     const newProjectValue = newProjectInput.value.trim();
+
+//     if (newProjectValue !== '') {
+//         let nextKey = 'p1';
+//         for (let i = 10; i <= 99; i++) {
+//             if (!projectsListText.hasOwnProperty(keyToCheck)) {
+//                 nextKey = keyToCheck;
+//                 break;
+//             }
+//         }
+
+//         projectsListText[nextKey] = newProjectValue;
+
+//         newProjectInput.value = '';
+
+//         createAndAppendNewProject(projectsListText);
+//     }
+// }
+
+
+// function createAndAppendNewProject(projectsListData, listAttributesData) {
+//     const list = document.querySelector('.section.projects-list ul');
+//     list.innerHTML = '';
+
+//     for (const key in projectsListData) {
+//         const projectName = projectsListData[key];
+//         const img = createElement('img', {
+//             src: listAttributesData.image,
+//             alt: listAttributesData.alt
+//         }); 
+//         const textNode = document.createTextNode(projectName);
+//         const projectsDiv = createElement('li', null, img, textNode);
+//         projectsDiv.classList.add(key);
+//         list.appendChild(projectsDiv);
+//     }
+
+//     document.getElementById('add-new-project').addEventListener('keyup', function (event) {
+//         if (event.key === 'Enter') {
+//             prepareNewProject();
+//         }
+//     });
+//     document.getElementById('new-project').addEventListener('click', function() {
+//         prepareNewProject();
+//     });
+// }
+
 
 function createAndAppendTasksTitleAndList(projectData, container) {
     const tasksTitleData = projectData['Project'];
@@ -496,392 +585,21 @@ function createNewTask() {
 }
 
 
-const Project1 = {
-    'Project': {
-        position: "middle",
-        image: "./img/folder-arrow-down.svg",
-        alt: "arrow pointing right icon",
-        text: "Project 1",
-        id: "tasks-list-project"
-    },
-    '0': {
-        'task-edit': "Edit",
-        'task-title': "Task 1 Title",
-        'task-description': "Diam maecenas ultricies mi eget mauris pharetra et. Aliquam vestibulum morbi blandit cursus risus at ultrices.",
-        'task-duedate': "12/06/2023",
-        'priority-level': "high",
-        'status': "In Progress"
-    },
-    '1': {
-        'task-edit': "Edit",
-        'task-title': "Task 2 Title",
-        'task-description': "In fermentum et sollicitudin ac orci phasellus. Risus feugiat in ante metus dictum.",
-        'task-duedate': "12/15/2023",
-        'priority-level': "medium",
-        'status': "Complete"
-    },
-    '2': {
-        'task-edit': "Edit",
-        'task-title': "Task 3 Title",
-        'task-description': "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        'task-duedate': "12/18/2023",
-        'priority-level': "medium",
-        'status': "In Progress"
-    },
-    '3': {
-        'task-edit': "Edit",
-        'task-title': "Task 4 Title",
-        'task-description': "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        'task-duedate': "01/04/2024",
-        'priority-level': "low",
-        'status': "Not Started"
-    },
-    '4': {
-        'task-edit': "Edit",
-        'task-title': "Task 5 Title",
-        'task-description': "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-        'task-duedate': "01/17/2024",
-        'priority-level': "high",
-        'status': "In Progress"
-    },
-    '5': {
-        'task-edit': "Edit",
-        'task-title': "Task 6 Title",
-        'task-description': "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        'task-duedate': "01/23/2024",
-        'priority-level': "medium",
-        'status': "Not Started"
-    }
-}
-
-
-const Project2 = {
-    'Project': {
-        position: "middle",
-        image: "./img/folder-arrow-down.svg",
-        alt: "arrow pointing right icon",
-        text: "Project 2",
-        id: "tasks-list-project"
-    },
-    '0': {
-        'task-edit': "Edit",
-        'task-title': "Task 1 Title",
-        'task-description': "Diam maecenas ultricies mi eget mauris pharetra et. Aliquam vestibulum morbi blandit cursus risus at ultrices.",
-        'task-duedate': "12/06/2023",
-        'priority-level': "high",
-        'status': "In Progress"
-    },
-    '1': {
-        'task-edit': "Edit",
-        'task-title': "Task 2 Title",
-        'task-description': "In fermentum et sollicitudin ac orci phasellus. Risus feugiat in ante metus dictum.",
-        'task-duedate': "12/15/2023",
-        'priority-level': "medium",
-        'status': "Complete"
-    }
-}
-
-
-const Project3 = {
-    'Project': {
-        position: "middle",
-        image: "./img/folder-arrow-down.svg",
-        alt: "arrow pointing right icon",
-        text: "Project 3",
-        id: "tasks-list-project"
-    },
-    '0': {
-        'task-edit': "Edit",
-        'task-title': "Task 1 Title",
-        'task-description': "Diam maecenas ultricies mi eget mauris pharetra et. Aliquam vestibulum morbi blandit cursus risus at ultrices.",
-        'task-duedate': "12/06/2023",
-        'priority-level': "high",
-        'status': "In Progress"
-    },
-    '1': {
-        'task-edit': "Edit",
-        'task-title': "Task 2 Title",
-        'task-description': "In fermentum et sollicitudin ac orci phasellus. Risus feugiat in ante metus dictum.",
-        'task-duedate': "12/15/2023",
-        'priority-level': "medium",
-        'status': "Complete"
-    },
-    '2': {
-        'task-edit': "Edit",
-        'task-title': "Task 3 Title",
-        'task-description': "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        'task-duedate': "12/18/2023",
-        'priority-level': "medium",
-        'status': "In Progress"
-    },
-    '3': {
-        'task-edit': "Edit",
-        'task-title': "Task 4 Title",
-        'task-description': "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        'task-duedate': "01/04/2024",
-        'priority-level': "low",
-        'status': "Not Started"
-    }
-}
-
-
-const Project4 = {
-    'Project': {
-        position: "middle",
-        image: "./img/folder-arrow-down.svg",
-        alt: "arrow pointing right icon",
-        text: "Project 4",
-        id: "tasks-list-project"
-    },
-    '0': {
-        'task-edit': "Edit",
-        'task-title': "Task 1 Title",
-        'task-description': "Diam maecenas ultricies mi eget mauris pharetra et. Aliquam vestibulum morbi blandit cursus risus at ultrices.",
-        'task-duedate': "12/06/2023",
-        'priority-level': "high",
-        'status': "In Progress"
-    },
-    '1': {
-        'task-edit': "Edit",
-        'task-title': "Task 2 Title",
-        'task-description': "In fermentum et sollicitudin ac orci phasellus. Risus feugiat in ante metus dictum.",
-        'task-duedate': "12/15/2023",
-        'priority-level': "medium",
-        'status': "Complete"
-    },
-    '2': {
-        'task-edit': "Edit",
-        'task-title': "Task 3 Title",
-        'task-description': "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        'task-duedate': "12/18/2023",
-        'priority-level': "medium",
-        'status': "In Progress"
-    },
-    '3': {
-        'task-edit': "Edit",
-        'task-title': "Task 4 Title",
-        'task-description': "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        'task-duedate': "01/04/2024",
-        'priority-level': "low",
-        'status': "Not Started"
-    },
-    '4': {
-        'task-edit': "Edit",
-        'task-title': "Task 5 Title",
-        'task-description': "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-        'task-duedate': "01/17/2024",
-        'priority-level': "high",
-        'status': "In Progress"
-    }
-}
-
-
-const Project5 = {
-    'Project': {
-        position: "middle",
-        image: "./img/folder-arrow-down.svg",
-        alt: "arrow pointing right icon",
-        text: "Project 5",
-        id: "tasks-list-project"
-    },
-    '0': {
-        'task-edit': "Edit",
-        'task-title': "Task 1 Title",
-        'task-description': "Diam maecenas ultricies mi eget mauris pharetra et. Aliquam vestibulum morbi blandit cursus risus at ultrices.",
-        'task-duedate': "12/06/2023",
-        'priority-level': "high",
-        'status': "In Progress"
-    }
-}
-
-
-const Project6 = {
-    'Project': {
-        position: "middle",
-        image: "./img/folder-arrow-down.svg",
-        alt: "arrow pointing right icon",
-        text: "Project 6",
-        id: "tasks-list-project"
-    },
-    '0': {
-        'task-edit': "Edit",
-        'task-title': "Task 1 Title",
-        'task-description': "Diam maecenas ultricies mi eget mauris pharetra et. Aliquam vestibulum morbi blandit cursus risus at ultrices.",
-        'task-duedate': "12/06/2023",
-        'priority-level': "high",
-        'status': "In Progress"
-    },
-    '1': {
-        'task-edit': "Edit",
-        'task-title': "Task 2 Title",
-        'task-description': "In fermentum et sollicitudin ac orci phasellus. Risus feugiat in ante metus dictum.",
-        'task-duedate': "12/15/2023",
-        'priority-level': "medium",
-        'status': "Complete"
-    },
-    '2': {
-        'task-edit': "Edit",
-        'task-title': "Task 3 Title",
-        'task-description': "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        'task-duedate': "12/18/2023",
-        'priority-level': "medium",
-        'status': "In Progress"
-    },
-    '3': {
-        'task-edit': "Edit",
-        'task-title': "Task 4 Title",
-        'task-description': "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        'task-duedate': "01/04/2024",
-        'priority-level': "low",
-        'status': "Not Started"
-    },
-    '4': {
-        'task-edit': "Edit",
-        'task-title': "Task 5 Title",
-        'task-description': "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-        'task-duedate': "01/17/2024",
-        'priority-level': "high",
-        'status': "In Progress"
-    },
-    '5': {
-        'task-edit': "Edit",
-        'task-title': "Task 6 Title",
-        'task-description': "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        'task-duedate': "01/23/2024",
-        'priority-level': "medium",
-        'status': "Not Started"
-    }
-}
-
-
-const Project7 = {
-    'Project': {
-        position: "middle",
-        image: "./img/folder-arrow-down.svg",
-        alt: "arrow pointing right icon",
-        text: "Project 7",
-        id: "tasks-list-project"
-    },
-    '0': {
-        'task-edit': "Edit",
-        'task-title': "Task 1 Title",
-        'task-description': "Diam maecenas ultricies mi eget mauris pharetra et. Aliquam vestibulum morbi blandit cursus risus at ultrices.",
-        'task-duedate': "12/06/2023",
-        'priority-level': "high",
-        'status': "In Progress"
-    },
-    '1': {
-        'task-edit': "Edit",
-        'task-title': "Task 2 Title",
-        'task-description': "In fermentum et sollicitudin ac orci phasellus. Risus feugiat in ante metus dictum.",
-        'task-duedate': "12/15/2023",
-        'priority-level': "medium",
-        'status': "Complete"
-    }
-}
-
-
-const Project8 = {
-    'Project': {
-        position: "middle",
-        image: "./img/folder-arrow-down.svg",
-        alt: "arrow pointing right icon",
-        text: "Project 8",
-        id: "tasks-list-project"
-    },
-    '0': {
-        'task-edit': "Edit",
-        'task-title': "Task 1 Title",
-        'task-description': "Diam maecenas ultricies mi eget mauris pharetra et. Aliquam vestibulum morbi blandit cursus risus at ultrices.",
-        'task-duedate': "12/06/2023",
-        'priority-level': "high",
-        'status': "In Progress"
-    },
-    '1': {
-        'task-edit': "Edit",
-        'task-title': "Task 2 Title",
-        'task-description': "In fermentum et sollicitudin ac orci phasellus. Risus feugiat in ante metus dictum.",
-        'task-duedate': "12/15/2023",
-        'priority-level': "medium",
-        'status': "Complete"
-    },
-    '2': {
-        'task-edit': "Edit",
-        'task-title': "Task 3 Title",
-        'task-description': "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        'task-duedate': "12/18/2023",
-        'priority-level': "medium",
-        'status': "In Progress"
-    },
-    '3': {
-        'task-edit': "Edit",
-        'task-title': "Task 4 Title",
-        'task-description': "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        'task-duedate': "01/04/2024",
-        'priority-level': "low",
-        'status': "Not Started"
-    }
-}
-
-
-const Project9 = {
-    'Project': {
-        position: "middle",
-        image: "./img/folder-arrow-down.svg",
-        alt: "arrow pointing right icon",
-        text: "Project 9",
-        id: "tasks-list-project"
-    },
-    '0': {
-        'task-edit': "Edit",
-        'task-title': "Task 1 Title",
-        'task-description': "Diam maecenas ultricies mi eget mauris pharetra et. Aliquam vestibulum morbi blandit cursus risus at ultrices.",
-        'task-duedate': "12/06/2023",
-        'priority-level': "high",
-        'status': "In Progress"
-    },
-    '1': {
-        'task-edit': "Edit",
-        'task-title': "Task 2 Title",
-        'task-description': "In fermentum et sollicitudin ac orci phasellus. Risus feugiat in ante metus dictum.",
-        'task-duedate': "12/15/2023",
-        'priority-level': "medium",
-        'status': "Complete"
-    },
-    '2': {
-        'task-edit': "Edit",
-        'task-title': "Task 3 Title",
-        'task-description': "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-        'task-duedate': "12/18/2023",
-        'priority-level': "medium",
-        'status': "In Progress"
-    }
-}
-
-
-const projectMapping = {
-    Project1: Project1,
-    Project2: Project2,
-    Project3: Project3,
-    Project4: Project4,
-    Project5: Project5,
-    Project6: Project6,
-    Project7: Project7,
-    Project8: Project8,
-    Project9: Project9
-}
-
-
 function selectProject(container) {
     for (let i = 1; i <= 9; i++) {
         const projectTitleDiv = document.querySelector(`.p${i}`);
         if (projectTitleDiv) {
             projectTitleDiv.addEventListener('click', () => {
+                var stylesheet = document.getElementById('stylesheetToSwitch');
+                if (stylesheet.href.endsWith('style.css')) {
+                    stylesheet.href = 'style2.css';
+                }
                 const projectData = projectMapping[`Project${i}`];
                 createAndAppendTasksTitleAndList(projectData, container);
             });
         }
     }
+
 }
 
 
