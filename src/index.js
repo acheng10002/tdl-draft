@@ -12,12 +12,13 @@ createAndAppendDate(processedDate, pageInfo);
 const processedTitles = prepareObjectData(titles, prepareTitleData);
 createAndAppendTitles(processedTitles, pageInfo);
 
-createAndAppendProjectsListAndField(projectsListText, projectsListAttributes, newProjectFieldAttributes, pageInfo);
-
-selectProject(pageInfo);
 
 const processedButtons = prepareObjectData(buttons, prepareButtonData);
 createAndAppendButtons(processedButtons, pageInfo);
+
+createAndAppendProjectsListAndField(projectsListText, projectsListAttributes, newProjectFieldAttributes, pageInfo);
+
+selectProject(pageInfo);
 
 createAndAppendTasksTitleAndList(Project1, pageInfo);
 

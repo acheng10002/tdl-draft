@@ -143,88 +143,48 @@ function createAndAppendButtons(buttonsData, container) {
 }
 
 
-// function prepareNewProject() {
-//     const newProjectInput = document.getElementById('add-new-project');
-
-//     const newProjectValue = newProjectInput.value.trim();
-
-//     if (newProjectValue !== '') {
-//         let nextKey = 'p1';
-//         for (let i = 10; i <= 99; i++) {
-//             const keyToCheck = 'p' + i;
-//             if (!projectsListText.hasOwnProperty(keyToCheck)) {
-//                 nextKey = keyToCheck;
-//                 break;
-//             }
-//         }
-    
-//         projectsListText[nextKey] = newProjectValue;
-
-//         updatedProjectsListText = projectsListText;
-
-//         newProjectInput.value = '';
-
-//         return updatedProjectsListText;
-//     }
-// }
+function createProjectListItem(key, projectName, list, listAttributesData) {
+    const img = createElement('img', {
+        src: listAttributesData.image,
+        alt: listAttributesData.alt
+    });
+    const textNode = document.createTextNode(projectName);
+    const projectsDiv = createElement('li', null, img, textNode);
+    projectsDiv.classList.add(key);
+    list.appendChild(projectsDiv);
+}
 
 
-function createAndAppendProjectsListAndField(projectsListData, listAttributesData, fieldAttributesData, container) {
-    // document.getElementById('add-new-project').addEventListener('keyup', function (event) {
-    //     if (event.key === 'Enter') {
-    //         let updatedProjectsListText = prepareNewProject();
-    //         projectsListData = updatedProjectsListText;
-    //     }
-    // });
+function addNewProject(projectsListText, input, list, listAttributesData) {
+    const newProjectValue = input.value.trim();
+    if (newProjectValue !== '') {
+        const nextKey = 'p' + (Object.keys(projectsListText).length + 1);
+        projectsListText[nextKey] = newProjectValue;
+        createProjectListItem(nextKey, newProjectValue, list, listAttributesData);
+        input.value = '';
+    }
+}
 
-    // document.getElementById('new-project').addEventListener('click', function() {
-    //     let updatedProjectsListText = prepareNewProject();
-    //     projectsListData = updatedProjectsListText;
-    // });
 
-    // creates a div element and sets it classes
-    const listDiv = createElement('div', {className: "section projects-list left"});
+function createAndAppendProjectsListAndField(projectsListText, listAttributesData, fieldAttributesData, container) {
+    const listDiv = createElement('div', { className: "section projects-list left" });
 
-    // creates an ul ement
     const list = createElement('ul');
 
-    const lastKey = Object.keys(projectsListData).pop();
-
-    // iterates over the projectsListData object
-    for (const key in projectsListData) { 
-        const projectName = projectsListData[key];
-
-        // creates an img element and sets its src and alt attributes
-        const img = createElement('img', {
-            src: listAttributesData.image, 
-            alt: listAttributesData.alt});
-
-        // creates a text node without the need for additional HTML features
-        const textNode = document.createTextNode(projectName);
-
-        const projectsDiv = createElement('li', null, img, textNode);
-
-        projectsDiv.classList.add(key);
-
-        if (key === lastKey) {
-            projectsDiv.id = "last-li";
-        }
-
-        list.appendChild(projectsDiv);
+    for (const key in projectsListText) {
+        createProjectListItem(key, projectsListText[key], list, listAttributesData);
     }
-    
+
     listDiv.appendChild(list);
 
     const projectFieldDiv = createElement('div');
 
-    // creates a label element and sets its for attribute to the value at index 0 of the fieldAttributesData object
-    const label = createElement('label', {htmlFor: Object.values(fieldAttributesData)[0]});
+    const label = createElement('label', { htmlFor: fieldAttributesData.id });
 
-    // creates a label element and sets its type, id, and placeholder attributes
     const input = createElement('input', {
-        type: Object.values(fieldAttributesData)[1],
-        id: Object.values(fieldAttributesData)[2],
-        placeholder: Object.values(fieldAttributesData)[3]
+        type: fieldAttributesData.type,
+        id: fieldAttributesData.id,
+        placeholder: fieldAttributesData.placeholder
     });
 
     projectFieldDiv.appendChild(label);
@@ -233,55 +193,70 @@ function createAndAppendProjectsListAndField(projectsListData, listAttributesDat
     listDiv.appendChild(projectFieldDiv);
 
     container.appendChild(listDiv);
+
+    document.getElementById("new-project").addEventListener('click', function() {
+        addNewProject(projectsListText, input, list, listAttributesData);
+    });
+
+    input.addEventListener('keyup', function (event) {
+        if (event.key === 'Enter') {
+            addNewProject(projectsListText, input, list, listAttributesData);
+        }
+    });
 }
+    
+// function createAndAppendProjectsListAndField(projectsListData, listAttributesData, fieldAttributesData, container) {
+//     // creates a div element and sets it classes
+//     const listDiv = createElement('div', {className: "section projects-list left"});
 
+//     // creates an ul ement
+//     const list = createElement('ul');
 
-// function prepareNewProject() {
-//     const newProjectInput = document.getElementById('add-new-project');
-//     const newProjectValue = newProjectInput.value.trim();
+//     const lastKey = Object.keys(projectsListData).pop();
 
-//     if (newProjectValue !== '') {
-//         let nextKey = 'p1';
-//         for (let i = 10; i <= 99; i++) {
-//             if (!projectsListText.hasOwnProperty(keyToCheck)) {
-//                 nextKey = keyToCheck;
-//                 break;
-//             }
+//     // iterates over the projectsListData object
+//     for (const key in projectsListData) { 
+//         const projectName = projectsListData[key];
+
+//         // creates an img element and sets its src and alt attributes
+//         const img = createElement('img', {
+//             src: listAttributesData.image, 
+//             alt: listAttributesData.alt});
+
+//         // creates a text node without the need for additional HTML features
+//         const textNode = document.createTextNode(projectName);
+
+//         const projectsDiv = createElement('li', null, img, textNode);
+
+//         projectsDiv.classList.add(key);
+
+//         if (key === lastKey) {
+//             projectsDiv.id = "last-li";
 //         }
 
-//         projectsListText[nextKey] = newProjectValue;
-
-//         newProjectInput.value = '';
-
-//         createAndAppendNewProject(projectsListText);
-//     }
-// }
-
-
-// function createAndAppendNewProject(projectsListData, listAttributesData) {
-//     const list = document.querySelector('.section.projects-list ul');
-//     list.innerHTML = '';
-
-//     for (const key in projectsListData) {
-//         const projectName = projectsListData[key];
-//         const img = createElement('img', {
-//             src: listAttributesData.image,
-//             alt: listAttributesData.alt
-//         }); 
-//         const textNode = document.createTextNode(projectName);
-//         const projectsDiv = createElement('li', null, img, textNode);
-//         projectsDiv.classList.add(key);
 //         list.appendChild(projectsDiv);
 //     }
+    
+//     listDiv.appendChild(list);
 
-//     document.getElementById('add-new-project').addEventListener('keyup', function (event) {
-//         if (event.key === 'Enter') {
-//             prepareNewProject();
-//         }
+//     const projectFieldDiv = createElement('div');
+
+//     // creates a label element and sets its for attribute to the value at index 0 of the fieldAttributesData object
+//     const label = createElement('label', {htmlFor: Object.values(fieldAttributesData)[0]});
+
+//     // creates a label element and sets its type, id, and placeholder attributes
+//     const input = createElement('input', {
+//         type: Object.values(fieldAttributesData)[1],
+//         id: Object.values(fieldAttributesData)[2],
+//         placeholder: Object.values(fieldAttributesData)[3]
 //     });
-//     document.getElementById('new-project').addEventListener('click', function() {
-//         prepareNewProject();
-//     });
+
+//     projectFieldDiv.appendChild(label);
+//     projectFieldDiv.appendChild(input);
+
+//     listDiv.appendChild(projectFieldDiv);
+
+//     container.appendChild(listDiv);
 // }
 
 
