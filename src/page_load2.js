@@ -144,60 +144,87 @@ function createAndAppendButtons(buttonsData, container) {
 
 
 function createProjectListItem(key, projectName, list, listAttributesData) {
+    // creates the arrow pointing right image with attributes taken from listAttributesData
     const img = createElement('img', {
         src: listAttributesData.image,
         alt: listAttributesData.alt
     });
     const textNode = document.createTextNode(projectName);
+
+    // creates a li element containing the img element and text node with the projectName
     const projectsDiv = createElement('li', null, img, textNode);
     projectsDiv.classList.add(key);
+
+    // appends the newly created li element to the ul element
     list.appendChild(projectsDiv);
 }
 
 
 function addNewProject(projectsListText, input, list, listAttributesData) {
+    // trims whitespace from the input value
     const newProjectValue = input.value.trim();
+
+    // ensures that the input is not empty
     if (newProjectValue !== '') {
+
+        // generates a new key for the project by counting the existing projects and adding 1
         const nextKey = 'p' + (Object.keys(projectsListText).length + 1);
+
+        // adds the new projectName to the projectsListText object
         projectsListText[nextKey] = newProjectValue;
+
+        // creates a new list item for the project and adds it to the list
         createProjectListItem(nextKey, newProjectValue, list, listAttributesData);
+
+        // clears the input field after adding the new project
         input.value = '';
     }
 }
 
 
 function createAndAppendProjectsListAndField(projectsListText, listAttributesData, fieldAttributesData, container) {
+
+    // creates a div to contain the projects list
     const listDiv = createElement('div', { className: "section projects-list left" });
 
     const list = createElement('ul');
 
+    // loops through projectsListText and calls createProjectListItem for each project to populate the list
     for (const key in projectsListText) {
         createProjectListItem(key, projectsListText[key], list, listAttributesData);
     }
 
     listDiv.appendChild(list);
 
+    // creates a container for the input field
     const projectFieldDiv = createElement('div');
 
+    // creates a label element for the input field
     const label = createElement('label', { htmlFor: fieldAttributesData.id });
 
+    // creates the input field with attributes from fieldAttributesData
     const input = createElement('input', {
         type: fieldAttributesData.type,
         id: fieldAttributesData.id,
         placeholder: fieldAttributesData.placeholder
     });
 
+    // appends the label and input to the input field container
     projectFieldDiv.appendChild(label);
     projectFieldDiv.appendChild(input);
 
+    // appends the input field container to the projects list container
     listDiv.appendChild(projectFieldDiv);
 
+    // appends the list container to the main container
     container.appendChild(listDiv);
 
+    // adds a click event listener to the + New Project button that calls addNewProject when clicked
     document.getElementById("new-project").addEventListener('click', function() {
         addNewProject(projectsListText, input, list, listAttributesData);
     });
 
+    // adds a keyup event listener to the input field to call addNewProject when the Enter key is pressed
     input.addEventListener('keyup', function (event) {
         if (event.key === 'Enter') {
             addNewProject(projectsListText, input, list, listAttributesData);
@@ -205,60 +232,6 @@ function createAndAppendProjectsListAndField(projectsListText, listAttributesDat
     });
 }
     
-// function createAndAppendProjectsListAndField(projectsListData, listAttributesData, fieldAttributesData, container) {
-//     // creates a div element and sets it classes
-//     const listDiv = createElement('div', {className: "section projects-list left"});
-
-//     // creates an ul ement
-//     const list = createElement('ul');
-
-//     const lastKey = Object.keys(projectsListData).pop();
-
-//     // iterates over the projectsListData object
-//     for (const key in projectsListData) { 
-//         const projectName = projectsListData[key];
-
-//         // creates an img element and sets its src and alt attributes
-//         const img = createElement('img', {
-//             src: listAttributesData.image, 
-//             alt: listAttributesData.alt});
-
-//         // creates a text node without the need for additional HTML features
-//         const textNode = document.createTextNode(projectName);
-
-//         const projectsDiv = createElement('li', null, img, textNode);
-
-//         projectsDiv.classList.add(key);
-
-//         if (key === lastKey) {
-//             projectsDiv.id = "last-li";
-//         }
-
-//         list.appendChild(projectsDiv);
-//     }
-    
-//     listDiv.appendChild(list);
-
-//     const projectFieldDiv = createElement('div');
-
-//     // creates a label element and sets its for attribute to the value at index 0 of the fieldAttributesData object
-//     const label = createElement('label', {htmlFor: Object.values(fieldAttributesData)[0]});
-
-//     // creates a label element and sets its type, id, and placeholder attributes
-//     const input = createElement('input', {
-//         type: Object.values(fieldAttributesData)[1],
-//         id: Object.values(fieldAttributesData)[2],
-//         placeholder: Object.values(fieldAttributesData)[3]
-//     });
-
-//     projectFieldDiv.appendChild(label);
-//     projectFieldDiv.appendChild(input);
-
-//     listDiv.appendChild(projectFieldDiv);
-
-//     container.appendChild(listDiv);
-// }
-
 
 function createAndAppendTasksTitleAndList(projectData, container) {
     const tasksTitleData = projectData['Project'];
