@@ -1,6 +1,6 @@
 import { titles, buttons, projectsListText, projectsListAttributes, newProjectFieldAttributes, firstThreeTaskFields, priorityTaskFieldLabel, priorityTaskField, statusTaskField } from './config.js';
 
-import { prepareDate, createAndAppendDate, prepareObjectData, prepareTitleData, createAndAppendTitles, prepareButtonData, createAndAppendButtons, createAndAppendProjectsListAndField, Project1, createAndAppendTasksTitleAndList, prepareThreeTaskFieldsData, preparePriorityTaskFieldData, createAndAppendTaskFields, createAndAppendStatusTaskField, selectProject } from './page_load2.js';
+import { prepareDate, createAndAppendDate, prepareObjectData, prepareTitleData, createAndAppendTitles, prepareButtonData, createAndAppendButtons, createAndAppendProjectsListAndField, Project1, createAndAppendTasksTitleAndList, prepareThreeTaskFieldsData, preparePriorityTaskFieldData, createAndAppendTaskFields, createAndAppendStatusTaskField, selectProject, createAndAppendTask } from './page_load2.js';
 
 const pageInfo = document.querySelector('div');
 
@@ -11,7 +11,6 @@ createAndAppendDate(processedDate, pageInfo);
 
 const processedTitles = prepareObjectData(titles, prepareTitleData);
 createAndAppendTitles(processedTitles, pageInfo);
-
 
 const processedButtons = prepareObjectData(buttons, prepareButtonData);
 createAndAppendButtons(processedButtons, pageInfo);
