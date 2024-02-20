@@ -212,4 +212,6 @@ li,
     font-size: 17px;
 }
 
-
+.right {
+    display: none;
+}
