@@ -9,22 +9,17 @@ let pageInfo = document.querySelector('div');
 pageInfo.id = 'content';
 
 /* DATE 
-   creates an element for a localized date string that was converted from a Date object,
-   and appends it to the 'content' div */
+   creates an element for a localized date string that was converted from a Date object, and appends it to the 'content' div */
 const processedDate = prepareDate();
 createAndAppendDate(processedDate, pageInfo);
 
-/*  LEFT PANE TITLE AND RIGHT PANE TITLE
-    (RIGHT PANE TITLE IS INITIALLY HIDDEN)
-   creates elements for two processed titles data that is in an array
-   and appends them to the 'content' div */
+/* LEFT PANE TITLE AND RIGHT PANE TITLE (RIGHT PANE TITLE IS INITIALLY HIDDEN)
+   creates elements for two processed titles data that is in an array and appends them to the 'content' div */
 const processedTitles = prepareObjectData(titles, prepareTitleData);
 createAndAppendTitles(processedTitles, pageInfo);
 
-/* NEW PROJECT, NEW TASK, AND SAVE BUTTONS
-   (SAVE BUTTON IS INITIALLY HIDDEN)
-   creates elements for processed buttons data
-   and appends them to the 'content' div */
+/* NEW PROJECT, NEW TASK, AND SAVE BUTTONS (SAVE BUTTON IS INITIALLY HIDDEN)
+   creates elements for processed buttons data and appends them to the 'content' div */
 let processedButtons = prepareObjectData(buttons, prepareButtonData);
 createAndAppendButtons(processedButtons, pageInfo);
 
@@ -43,31 +38,8 @@ createAndAppendStatusTaskField(statusTaskField);
 /* ADDS EVENT LISTENER TO EACH PROJECT NAME AND CHANGES TASKS TITLE AND LIST ON MIDDLE PANE */
 selectProject(pageInfo, projectsListText, projectMapping);
 
-// projectData = selectProject(pageInfo);
+/* CURRENT ISSUES: 
 
-// let test = projectData['Project'];
-
-// console.log(test);
-
-/* selectProject(pageInfo);
-
-let projectData = selectProject(pageInfo);
-
-   createAndAppendTasksTitleAndList(projectData, pageInfo);
-
-   createAndAppendTasksTitleAndList(pageInfo);
-
-   selectProject(pageInfo);
-   
-
-   console.log(projectData);
-   createAndAppendTasksTitleAndList(projectData, pageInfo);
-   selectProject(pageInfo); 
-   
-   
-   CURRENT ISSUES:
-   
-   NEW TASK ONLY ADDED TO PROJECT 1 TASKS LIST UPON LOAD AND NOT AFTER PROJECT SELECTION 
-   NEW TASK ONLY ADDED PROJECT 1 TASKS LIST AND NOT ANY OTHER PROJECT TASKS LIST
-   IN PAGELOAD2.JS, PROJECTDATA['PROJECT'] KEEPS BEING UNDEFINED */
-
+     NEWLY ADDED PROJECTS DO NOT BECOME SELECTABLE PROJECTS     
+   X SEQUENCE OF EDIT BUTTON CLICK AND SAVE BUTTON CLICK, CREATES NEW TASK INSTEAD OF SAVING EDITTED TASK 
+     FIX EXECUTION OF NEW PROJECT CLICK WHEN NO NEW PROJECT INPUT */

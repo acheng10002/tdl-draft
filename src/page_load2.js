@@ -1,6 +1,8 @@
-import {projectMapping, projectsListText, Project1 } from './config.js'
+import {projectMapping} from './config.js'
 
 let currentProjectData = projectMapping['Project1'];
+let isEditingTask = false;
+let editingTaskId = null;
 
 
 /* returns a localized date string that was converted from a Date object, formatted to a specific locale and options */
@@ -11,8 +13,7 @@ function prepareDate() {
 
 /* utility function that creates HTML elements 
    type is the type of HTML element to be created
-   properties is an object containing key-value pairs where keys are property keys and 
-   values are property values to be set on the HTML element
+   properties is an object containing key-value pairs where keys are property keys and values are property values to be set on the HTML element
    rest parameter allows for an indefinite number of arguments representing child elements 
         the rest parameter arguments are treated as an array inside the function */
 function createElement(type, properties, ...children) {
@@ -27,14 +28,14 @@ function createElement(type, properties, ...children) {
     }
         
     /* iterates over the children array, and for each child,
-        appends the child to the element */
+        appends the child to the parent element */
     children.forEach(child => element.appendChild(child));
         
     return element;
 }
 
 
-// creates an element for Date and append it to the page container
+// creates an element for Date string and appends it to the page container; createAndAppendDate(processedData, pageInfo)
 function createAndAppendDate(dateData, container) {
     // creates a date div and sets its classes and text content 
     const dateDiv = createElement('div', {
@@ -47,7 +48,7 @@ function createAndAppendDate(dateData, container) {
 }
 
 
-/* takes in an properties object made up of key-value pairs, prepareFunction processes it and pushes the processed data into an array */
+/* takes in a data object made up of key-value pairs, prepareFunction processes it and pushes the processed data into an array */
 function prepareObjectData(obj, prepareFunction) {
     const processedData = [];
 
@@ -56,17 +57,17 @@ function prepareObjectData(obj, prepareFunction) {
         // item is assigned the value of the current property being iterated over
         const item = obj[key];
         /* calls prepareFunction, passing it the current key and its value, 
-           and pushes the result of this function into the processedData array */
+           and pushes the result of the prepareFunction into the processedData array */
         processedData.push(prepareFunction(key, item));
     }
     return processedData;
 }
 
 
-// a prepareData function that processes the titles object and returns the processed data
+// a prepareData function that processes the title object and returns the processed data; prepareObjectData(titles, prepareTitleData) 
 function prepareTitleData(key, item) {
     return {
-        /* processes the current key-value pairs of a title object and then returns them
+        /* processes the key-value pairs of a title object and then returns them
             sets classes property for the object, sets the src property for an image associated with the current value,
             sets the alt property for that image, sets text content, sets a class for the text */
         classes: ["section", key, item.position],
@@ -78,7 +79,7 @@ function prepareTitleData(key, item) {
 }
 
 
-// creates elements for the processed titles data and appends them to the page container
+// creates elements for the processed titles data and appends them to the page container; createAndAppendTitles(processedTitles, pageInfo)
 function createAndAppendTitles(titlesData, container) {
     /* iterates over an array of processed title data/objects, each object includes the 
        title's classes, title's image data, alt text data, and text content */
@@ -104,11 +105,6 @@ function createAndAppendTitles(titlesData, container) {
             textContent: data.textContent
         });
 
-        // if id is a key in the processed object, use that value as the id attribute for the text content div
-        if (data.id) {
-            textDiv.id = data.id;
-        }
-
         // append img and text content div elements to their container, titleDiv 
         titleDiv.appendChild(img);
         titleDiv.appendChild(textDiv);
@@ -131,10 +127,10 @@ function prepareButtonData(key, item) {
 }
 
 
-// creates elements for the processed buttons data and appends them to the page container
+// creates elements for the processed buttons data and appends them to the page container; createAndAppendButtons(processedButtons, pageInfo)
 function createAndAppendButtons(buttonsData, container) {
-    /* iterates over an array of button objects, each object includes the
-       button's id and text content, and for the div the button is nested into, classes */
+    /* iterates over an array of button objects, each object includes the button's id and text content, 
+       and for the div the button is nested into, its classes */
     buttonsData.forEach(data => { 
 
         // creates a button element and sets its id attribute and text content 
@@ -320,7 +316,7 @@ function createAndAppendTasksTitleAndList(projectData, container) {
 
     // iterates through keys/objects inside the projectData object
     for (let taskKey in projectData) {
-        // move on if the the key is Project (which contains properties for the title)
+        // move on if the key is Project (which contains properties for the title)
         if (taskKey === 'Project') continue;
 
         // data assigned to the value/object associated with projectData[taskKey]
@@ -342,7 +338,15 @@ function createAndAppendTasksTitleAndList(projectData, container) {
         // adds a click event listener to the Edit div element
         taskEditDiv.addEventListener('click', function() {
             // when Edit is clicked, run populateFormFields to populate the task form fields with values from the object
-            populateFormFields(taskKey);
+            isEditingTask = true;
+            editingTaskId = this.parentElement.getAttribute('id');
+            switchStylesheet();
+            populateFormFields(editingTaskId);
+            // let saveTaskButton = document.getElementById("save-task");
+    
+            // saveTaskButton.addEventListener('click', () => {
+                // createAndAppendTask(currentProjectData, container);
+            // });
         });
 
         // creates a div for the task title key's value and sets its class and text content
@@ -393,16 +397,6 @@ function createAndAppendTasksTitleAndList(projectData, container) {
 
         container.appendChild(tasksListDiv);
     }
-
-    // taskEditDivs array is assigned to all elements with the 'task-edit' class
-    let taskEditDivs = document.getElementsByClassName('task-edit');
-
-    // creates a click event listener for each div element of class 'task-edit'
-    Array.from(taskEditDivs).forEach(function(div) {
-
-        // run switchStylesheet function when each div is clicked
-        div.addEventListener('click', switchStylesheet)
-    });
 }
 
 
@@ -649,6 +643,9 @@ function populateFormFields(taskId) {
 
 // creates a new task
 function createNewTask() {
+    isEditingTask = false;
+    editingTaskId = null;
+
     // switches from two panes to three panes
     switchStylesheet();
 
@@ -697,7 +694,7 @@ function selectProject(container, projectsListText, projectMapping) {
 
                 currentProjectData = projectMapping ? projectMapping[`Project${projectIndex}`] : projectsListText[key];
 
-                createAndAppendTasksTitleAndList (currentProjectData, container);
+                createAndAppendTasksTitleAndList(currentProjectData, container);
             });
         }
     });
@@ -705,10 +702,14 @@ function selectProject(container, projectsListText, projectMapping) {
 
 
 // factory function captures data from form inputs and constructs a task object when a new task is submitted
-function prepareTaskData() {
+function prepareTaskData(projectData, taskId = null) {
 
     // initializes an empty object to hold the task data
     const taskData = {};
+
+    if (editingTaskId !== null && projectData[editingTaskId]) {
+        Object.assign(taskData, projectData[editingTaskId]);
+    }
 
     // collects task title form form input
     taskData['task-title'] = document.getElementById('each-task').value;
@@ -746,6 +747,7 @@ function prepareTaskData() {
     return taskData;
 }
 
+
 function findLastTaskId(projectData) {
     let lastId = 0;
 
@@ -764,15 +766,16 @@ function createAndAppendTask(projectData, container) {
     let stylesheet = document.getElementById('stylesheetToSwitch');
 
     if (stylesheet.href.endsWith('style.css')) {
-        let lastTaskData = new prepareTaskData();
-
-        let lastTaskId = findLastTaskId(projectData);
-    
-        lastTaskId = lastTaskId + 1;
-
-        projectData[lastTaskId] = lastTaskData;
-
-        console.log(projectData);
+        let taskData;
+        if (isEditingTask && editingTaskId !== null) {
+            taskData = prepareTaskData(projectData, editingTaskId);
+            projectData[editingTaskId] = taskData;
+        } else {
+            taskData = prepareTaskData(projectData);
+            let lastTaskId = findLastTaskId(projectData);
+            lastTaskId = lastTaskId + 1;
+            projectData[lastTaskId] = taskData;
+        }
 
         createAndAppendTasksTitleAndList(projectData, container);
     }
