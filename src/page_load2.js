@@ -1,30 +1,27 @@
-import {projectMapping, Project1 } from './config.js'
+import {projectMapping, projectsListText, Project1 } from './config.js'
+
+let currentProjectData = projectMapping['Project1'];
+
 
 /* returns a localized date string that was converted from a Date object, formatted to a specific locale and options */
 function prepareDate() {
-    /* 'en-US' specifies locale, which is U.S. English
-       {} is an object specifying the formatting options: 
-       day of the month will be a number, 
-       month will be in its abbreviated form, 
-       year will be a number specific to the locale 
-       weekday will be in its full form*/
     return new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric', weekday: 'long' });
 }
 
 
 /* utility function that creates HTML elements 
    type is the type of HTML element to be created
-   properties is an object containing key-value pairs where keys are property names and 
-   values are the values for those properties to be set on the element 
-   rest parameter that allows for an indefinite number of arguments representing child elements 
+   properties is an object containing key-value pairs where keys are property keys and 
+   values are property values to be set on the HTML element
+   rest parameter allows for an indefinite number of arguments representing child elements 
         the rest parameter arguments are treated as an array inside the function */
 function createElement(type, properties, ...children) {
     const element = document.createElement(type);
         
-    // iterates over each key/property name in the properties object
+    // iterates over each key in the properties object
     for (const key in properties) {
         /* for each key, set the corresponding property value on the element
-            ex. if properties is {id: myElement, className: myClass, 
+            ex. if properties is {id: myElement, className: myClass}, 
             element will have its id set to myElement and its className set to myClass */
         element[key] = properties[key];
     }
@@ -39,28 +36,27 @@ function createElement(type, properties, ...children) {
 
 // creates an element for Date and append it to the page container
 function createAndAppendDate(dateData, container) {
-    // creates a div and sets its classes and text content 
+    // creates a date div and sets its classes and text content 
     const dateDiv = createElement('div', {
         className: "section date middle",
         textContent: dateData
     });
     
-    // appends the div to the page
+    // appends the date div to the page
     container.appendChild(dateDiv);
 }
 
 
-/* takes in an object made up of key-value pairs, and prepareFunction processes it and pushes the processed data into an array */
+/* takes in an properties object made up of key-value pairs, prepareFunction processes it and pushes the processed data into an array */
 function prepareObjectData(obj, prepareFunction) {
     const processedData = [];
 
-    // iterates over each key/property in obj
+    // iterates over each key in obj
     for (const key in obj) {
         // item is assigned the value of the current property being iterated over
         const item = obj[key];
         /* calls prepareFunction, passing it the current key and its value, 
-           and pushes the result of this function into the processedData array
-           this is where each key-value pair is actually processed */
+           and pushes the result of this function into the processedData array */
         processedData.push(prepareFunction(key, item));
     }
     return processedData;
@@ -70,8 +66,7 @@ function prepareObjectData(obj, prepareFunction) {
 // a prepareData function that processes the titles object and returns the processed data
 function prepareTitleData(key, item) {
     return {
-        /* takes the current key and its value of a title object and processes it 
-            sets/processes new key-value pairs and then returns them
+        /* processes the current key-value pairs of a title object and then returns them
             sets classes property for the object, sets the src property for an image associated with the current value,
             sets the alt property for that image, sets text content, sets a class for the text */
         classes: ["section", key, item.position],
@@ -82,9 +77,10 @@ function prepareTitleData(key, item) {
     };     
 }
 
+
 // creates elements for the processed titles data and appends them to the page container
 function createAndAppendTitles(titlesData, container) {
-    /* iterates over an array of processed data/objects, each object includes the 
+    /* iterates over an array of processed title data/objects, each object includes the 
        title's classes, title's image data, alt text data, and text content */
     titlesData.forEach(data => {
 
@@ -136,7 +132,7 @@ function prepareButtonData(key, item) {
 
 
 // creates elements for the processed buttons data and appends them to the page container
-function createAndAppendButtons(buttonsData, projectData, container) {
+function createAndAppendButtons(buttonsData, container) {
     /* iterates over an array of button objects, each object includes the
        button's id and text content, and for the div the button is nested into, classes */
     buttonsData.forEach(data => { 
@@ -165,69 +161,81 @@ function createAndAppendButtons(buttonsData, projectData, container) {
 
     let saveTaskButton = document.getElementById("save-task");
     
-    // // CREATE AND APPEND NEW TASK
-    // saveTaskButton.addEventListener('click', () => {
-    //     let projectKey = projectData['Project'];
-    //     let projectTitle = projectKey['text'];
-    //     if (!projectTitle.toString().includes('1')) {
-    //         createAndAppendTask(projectData, container);
-    //     } 
-    // });
     saveTaskButton.addEventListener('click', () => {
-            createAndAppendTask(projectData, container);
+        createAndAppendTask(currentProjectData, container);
     });
 }
-    // let currentProject = document.getElementById("tasks-list-project").textContent;
+
+
+function createAndAppendProjectsList(key, projectsListText, list, listAttributesData) {
+
+    const projectName = projectsListText[key];
     
-    // let currentProjectMatch = currentProject.match(/\d+/);
-    // let numberString = currentProjectMatch[0];
-    // let projectData = projectMapping[`Project${numberString}`];
+    // `this` keyword attaches properties and methods to the instance being created
+    let img = createElement('img');
+    img.src = listAttributesData.image;
+    img.alt = listAttributesData.alt;
 
+    // creates a text node with projectName as text content
+    let textNode = document.createTextNode(projectName);
 
-// creates the arrow img element, a text node, and an li element for a new project being added to the projects list
-function createProjectsListItem(key, projectName, list, listAttributesData) {
-    // creates the arrow pointing right image with attributes taken from listAttributesData
-    const img = createElement('img', {
-        src: listAttributesData.image,
-        alt: listAttributesData.alt
-    });
-    // creates a text node with projectName as text content 
-    const textNode = document.createTextNode(projectName);
-
-    // creates a li element with the img element and text node as children
-    const projectDiv = createElement('li', null, img, textNode);
-
-    // adds the key as a class attribute for the li element
-    projectDiv.classList.add(key);
+    // creates li element and append img element and text node as children
+    let projectDiv = createElement('li', { className: key }, img, textNode); 
 
     // appends the newly created li element to the ul element
     list.appendChild(projectDiv);
 }
 
 
-/* accesses the input in the new-project field and runs the createProjectsListItem 
-    function to add the input to the projects list */
-function appendNewProjectName(projectsListText, input, list, listAttributesData) {
-    // trims whitespace from the input value
-    const newProjectValue = input.value.trim();
-
-    // ensures that the input is not empty
-    if (newProjectValue !== '') {
-
-        /* generates a new key for the project (p10: "Project 10", etc.)
-            by counting the existing projects and adding 1 */
+/* creates a project list item based on the user input and appends it to the DOM,
+   updates a project list object with the new project's name */
+function createNewProjectsListItem(projectsListText, input, listAttributesData) {
+    // truthy/falsy check to proceed only if there's some content in the input field
+    if (input.value) {
+        // trims whitespace from the input value
+        
+        const projectName = input.value.trim();   
+        /* generates a new key for the project (p10: "Project 10", etc.)by concatenating 'p' with the number obtained
+        by adding 1 to the length of the projectsListText object's keys */
         const nextKey = 'p' + (Object.keys(projectsListText).length + 1);
+        
+        // adds the new project to the projectsListText object, with nextKey serving as the key and projectName as the value
+        projectsListText[nextKey] = projectName;
 
-        // adds the trimmed input value to the projectsListText object, paired with the nextKey key 
-        projectsListText[nextKey] = newProjectValue;
+        // initializes an empty object to store the new project's DOM element
+        const projectItem = {};
 
-        // creates a new list item for the project and adds it to the projects list
-        createProjectsListItem(nextKey, newProjectValue, list, listAttributesData);
+        // creates an img element and sets the src and alt attributes of the image
+        projectItem.img = createElement('img');
+        projectItem.img.src = listAttributesData.image;
+        projectItem.img.alt = listAttributesData.alt;
 
-        // clears the input field after adding the new project
-        input.value = '';
+        // creates a text node containing the project name, and it will be part of the list item's content
+        projectItem.textNode = document.createTextNode(projectName);
+
+        // creates an li element, sets its class name to nextKey and appends both the img element and the text node as children
+        projectItem.projectDiv = createElement('li', { className: nextKey }, projectItem.img, projectItem.textNode);
+
+        // returns the li element
+        return projectItem.projectDiv;
     }
 }
+
+
+/* accesses the input in the new-project field, runs the createProjectsListItem function to add the input to the projects list object
+   and return the li element, and appends the li element to the list ul element */
+function appendNewProjectName(projectsListText, input, list, listAttributesData) {
+    let projectItemDiv = createNewProjectsListItem(projectsListText, input, listAttributesData);
+
+    // appends the li element 
+    list.appendChild(projectItemDiv);
+
+    // clears the input field after adding the new project
+    input.value = '';
+
+    console.log(projectsListText);
+}
+
 
 // creates elements for the projects list and the new-project field
 function createAndAppendProjectsListAndField(projectsListText, listAttributesData, fieldAttributesData, container) {
@@ -240,7 +248,7 @@ function createAndAppendProjectsListAndField(projectsListText, listAttributesDat
 
     // loops through projectsListText and calls createProjectListItem on each project/key to populate the projects list
     for (const key in projectsListText) {
-        createProjectsListItem(key, projectsListText[key], list, listAttributesData);
+        createAndAppendProjectsList(key, projectsListText, list, listAttributesData);
     }
     
     // append the projects list to its container
@@ -291,8 +299,6 @@ function createAndAppendTasksTitleAndList(projectData, container) {
 
     // assigns tasksTitleData to the value/object associated with projectData['Project'] key
     const tasksTitleData = projectData['Project'];
-
-    // console.log(tasksTitleData);
 
     // creates a div for the title and sets it classes
     const titleDiv = createElement('div', {className: "section project-title tasks-list-project " + tasksTitleData.position});
@@ -388,8 +394,6 @@ function createAndAppendTasksTitleAndList(projectData, container) {
         container.appendChild(tasksListDiv);
     }
 
-    // console.log(tasksListDiv.textContent);
-
     // taskEditDivs array is assigned to all elements with the 'task-edit' class
     let taskEditDivs = document.getElementsByClassName('task-edit');
 
@@ -430,6 +434,7 @@ function preparePriorityTaskFieldData(key, item) {
             "data-color": item["data-color"]
     };
 }
+
 
 // creates and appends four task fields and a label for the fourth field to the page container
 function createAndAppendTaskFields(threeTaskFieldsData, fieldLabel, priorityTaskFieldData, container) {
@@ -526,6 +531,7 @@ function createAndAppendTaskFields(threeTaskFieldsData, fieldLabel, priorityTask
     container.appendChild(formDiv);
 }
 
+
 // creates and appends the status dropdown field to the page container
 function createAndAppendStatusTaskField(statusTaskFieldData) {
     // returns the form element
@@ -561,6 +567,7 @@ function createAndAppendStatusTaskField(statusTaskFieldData) {
     form.appendChild(statusTaskFieldDiv);
 }
 
+
 // switches from two panes to three panes 
 function switchStylesheet() {
     var stylesheet = document.getElementById('stylesheetToSwitch');
@@ -568,6 +575,7 @@ function switchStylesheet() {
         stylesheet.href = 'style.css';
     }
 } 
+
 
 // populates the form fields with the data for the task selected
 function populateFormFields(taskId) {
@@ -638,6 +646,7 @@ function populateFormFields(taskId) {
     statusSelect.value = taskStatus;
 }
 
+
 // creates a new task
 function createNewTask() {
     // switches from two panes to three panes
@@ -672,134 +681,70 @@ function createNewTask() {
 }
 
 
-// creates the middle pane for a selected project
-function selectProject(container) {
-    // let saveTaskButton = document.getElementById('save-task');
-
-    // let tasksListProject = document.querySelector(".tasks-list-project");
-
-    // if (tasksListProject.textContent === 'Project 1') {
-
-    //     // adds a click event listener to newTaskButton, and runs the createNewTask function when the button is clicked
-    //     // CREATE NEW TASK - I THINK THIS ONE IS OK...
-    //     saveTaskButton.addEventListener('click', () => {
-    //         console.log("Project 1");
-    //         createAndAppendTask(Project1, container);   
-    //     });
-    // } else {
-    //     console.log("Not Project 1");
-    // }
-    // loops through all the projects list elements
-    // 9 is a placeholder for what will likely be variable.length
-    for (let i = 1; i <= 9; i++) {
-        // returns all the projects list elements with a class of p1, p2, p3, etc.
-        const projectTitleDiv = document.querySelector(`.p${i}`);
+// creates the middle pane for a selected projects
+// function selectProject(container) {
+function selectProject(container, projectsListText, projectMapping) {
+    Object.keys(projectsListText).forEach(key => {
+        const projectIndex = key.substring(1);
+        const projectTitleDiv = document.querySelector(`.${key}`);
 
         if (projectTitleDiv) {
-            // adds a click event listener to each projects list element
-            // projectTitleDiv.addEventListener('click', appendTasksTitleListAndNewTask);
             projectTitleDiv.addEventListener('click', () => {
-
-                // returns the link element with an id of stylesheet 
                 let stylesheet = document.getElementById('stylesheetToSwitch');
-
-                // if the stylesheet currently has three panes, switch to two panes 
                 if (stylesheet.href.endsWith('style.css')) {
-                     stylesheet.href = 'style2.css';
+                    stylesheet.href = 'style2.css';
                 }
 
-                /* assigns the object that is keyed to the the projects list element selected, 
-                    Project1, Project2, Project3, etc. to projectData */
-                let projectData = projectMapping[`Project${i}`];
+                currentProjectData = projectMapping ? projectMapping[`Project${projectIndex}`] : projectsListText[key];
 
-                // processProjectData(projectData);               
-
-                // creates the tasks list in the middle pane for the selected project
-                // SHOWS MIDDLE PANE/TASKS LIST FOR SELECTED PROJECT
-                createAndAppendTasksTitleAndList(projectData, container);
-
-                // let processedButtons = prepareObjectData(buttons, prepareButtonData);
-                // createAndAppendButtons(processedButtons, projectData, container); 
-
-                // let newTaskButton = document.getElementById('new-task');
-
-                // newTaskButton.addEventListener('click', createNewTask);
-
-                let saveTaskButton = document.getElementById('save-task');
-
-                // adds a click event listener to newTaskButton, and runs the createNewTask function when the button is clicked
-                // CREATE NEW TASK - I THINK THIS ONE IS OK...
-                saveTaskButton.addEventListener('click', () => {
-                      let projectKey = projectData['Project'];
-                      let projectTitle = projectKey['text'];
-                      if (!projectTitle.toString().includes('1')) {
-                          createAndAppendTask(projectData, container);
-                     } 
-                });
+                createAndAppendTasksTitleAndList (currentProjectData, container);
             });
         }
-    }
+    });
 }
 
 
+// factory function captures data from form inputs and constructs a task object when a new task is submitted
 function prepareTaskData() {
-    // returns user input from the task fields
-    const taskTitle = document.getElementById('each-task').value;
+
+    // initializes an empty object to hold the task data
+    const taskData = {};
+
+    // collects task title form form input
+    taskData['task-title'] = document.getElementById('each-task').value;
+    
+    // process the due date to the desired format
     let taskDueDate = document.getElementById('task-duedate').value;
-
     const date = new Date(taskDueDate + 'T00:00:00');
-
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const year = date.getFullYear();
+    taskData['task-duedate'] = `${month}/${day}/${year}`;
 
-    taskDueDate = `${month}/${day}/${year}`;
+    // collects task description from form input
+    taskData['task-description'] = document.getElementById('task-description').value;
 
-    const taskDescription = document.getElementById('task-description').value;
+    // determines the selected priority level
     const radioInputs = document.querySelectorAll('input[type="radio"][name="priority"]');
-
-    let priorityLevel= null;
-
+    taskData['priority-level'] = null;
     for (const radioInput of radioInputs) {
         if (radioInput.checked) {
             const labelFor = radioInput.getAttribute('id');
             const associatedLabel = document.querySelector(`label[for="${labelFor}"]`);
-            const forAttribute = associatedLabel.textContent;
-            priorityLevel = forAttribute;
+            taskData['priority-level'] = associatedLabel.textContent.trim().toLowerCase();
+            break; // exits the loop once the selected option is found
         }
     }
-
+    // determines the selected task status
     const taskStatus = document.getElementById('status-dropdown');
-    const selectedIndex = taskStatus.selectedIndex;
-    const selectedTaskStatus = taskStatus.options[selectedIndex].value;
+    taskData['status'] = taskStatus.options[taskStatus.selectedIndex].value;
 
-    const task = {
-        'task-edit': "Edit",
-        'task-title': taskTitle,
-        'task-description': taskDescription,
-        'task-duedate': taskDueDate,
-        'priority-level': priorityLevel,
-        'status': selectedTaskStatus
-    };
+    // adds a static value for 'task-edit'
+    taskData['task-edit'] = "Edit";
 
-    return task;
+    // returns the populated task data object
+    return taskData;
 }
-
-
-// function findLastTaskId() {
-//     let lastId = 0;
-
-//     const taskElements = document.getElementsByClassName('task');
-
-//     for (let i = 0; i < taskElements.length; i++) {
-//         const taskId = parseInt(taskElements[i].id);
-
-//         if (!isNaN(taskId) && taskId > lastId) {
-//             lastId = taskId;
-//         }
-//     } 
-//     return lastId;
-// }
 
 function findLastTaskId(projectData) {
     let lastId = 0;
@@ -819,114 +764,19 @@ function createAndAppendTask(projectData, container) {
     let stylesheet = document.getElementById('stylesheetToSwitch');
 
     if (stylesheet.href.endsWith('style.css')) {
-        let lastTaskData = prepareTaskData();
+        let lastTaskData = new prepareTaskData();
 
         let lastTaskId = findLastTaskId(projectData);
-        // console.log(lastTaskId);
-
+    
         lastTaskId = lastTaskId + 1;
 
-    // let tasksListDiv = document.querySelector(".tasks-list");
+        projectData[lastTaskId] = lastTaskData;
 
-    // console.log(projectData);
-    // let projectKeyObject = currentProject['Project'];
-    // let projectTitle = projectKeyObject['text'];
+        console.log(projectData);
 
-    // let projectTitleDiv = createElement('div', {
-    //     className: "section project-title tasks-list-project middle",
-    //     textContent: `${projectTitle}`
-    // });
-
-    // container.appendChild(projectTitleDiv);
-
-    // let tasksListDiv = createElement('div', {
-    //     className: "section tasks-list middle"
-    // });
-    
-    // console.log(tasksListDiv);
-
-    // currentProject = selectProject(container);
-        if (lastTaskData) {
-            projectData[lastTaskId] = lastTaskData;
-
-            createAndAppendTasksTitleAndList(projectData, container);
-            // console.log(lastTaskId);
-
-    // createAndAppendTask(currentProject, container);
-
-    // const lastTaskDiv = createElement('div', {
-    //     className: 'task',
-    //     id: `${lastTaskId}`
-    // });
-
-    // // console.log(lastTaskData);
-
-    // // creates a div for the task title key's value and sets its class and text content
-    // const taskTitleDiv = createElement('div', {
-    //     className: "task-title",
-    //     textContent: lastTaskData["task-title"]
-    // });
-        
-    // // creates a div for "Task Description" and sets its class and text content
-    // const taskDescriptionDiv = createElement('div', {
-    //     className: "task-description",
-    //     textContent: lastTaskData["task-description"]
-    // });
-        
-    // /* creates a div for "Task Due Date" and sets its text content and 
-    //    sets its color class based on the value of its priority-level property */
-    // const taskDueDateDiv = createElement('div', {
-        
-    //     /* if the priority-level is high, set its color class to red 
-    //        if the priority-level is medium, set its color class to yellow
-    //        if the priority-level is low, set its color class to green */
-    //     className: `task-duedate ${lastTaskData["priority-level"] === "high" ? "red" : lastTaskData["priority-level"] === "medium" ? "yellow" : "green"}`,
-    //     textContent: lastTaskData["task-duedate"]
-    // });
-        
-    // // creates a div for "Priority Level", and sets its text content and classes, including the hide class
-    // const priorityLevelDiv = createElement('div', {
-    //     className: `priority-level hide`,
-    //     textContent: lastTaskData["priority-level"]
-    // });
-        
-    // // creates a div for "Status" and sets its text content and classes, including the hide class
-    // const statusDiv = createElement('div', {
-    //     className: `status hide`,
-    //     textContent: lastTaskData["status"]
-    // });
-
-    // const taskEditDiv = createElement('div', {
-    //     className: "task-edit",
-    //     textContent: lastTaskData["task-edit"]
-    // });
-
-    // // adds a click event listener to the Edit div element
-    // taskEditDiv.addEventListener('click', function() {
-    //     // when Edit is clicked, run populateFormFields to populate the task form fields with values from the object
-    //     populateFormFields(lastTaskId);
-        
-    // });
-
-    // lastTaskDiv.appendChild(taskTitleDiv);
-    // lastTaskDiv.appendChild(taskDescriptionDiv);
-    // lastTaskDiv.appendChild(taskDueDateDiv);
-    // lastTaskDiv.appendChild(priorityLevelDiv);
-    // lastTaskDiv.appendChild(statusDiv);
-    // lastTaskDiv.appendChild(taskEditDiv);
-
-    // tasksListDiv.appendChild(lastTaskDiv);
-    // container.appendChild(tasksListDiv);
+        createAndAppendTasksTitleAndList(projectData, container);
     }
 }
-   // console.log(tasksListDiv.textContent);
-}
-
-// function appendNewTask(container) {
-//     currentProject = selectProject(container);
-//     let lastTaskDiv = prepareTaskData();
-
-// */}
 
 
 export { prepareDate, createAndAppendDate, prepareObjectData, prepareTitleData, createAndAppendTitles, prepareButtonData, createAndAppendButtons, createAndAppendProjectsListAndField, createAndAppendTasksTitleAndList, prepareThreeTaskFieldsData, preparePriorityTaskFieldData, createAndAppendTaskFields, createAndAppendStatusTaskField, selectProject  };
