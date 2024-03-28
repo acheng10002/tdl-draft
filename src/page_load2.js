@@ -1,4 +1,8 @@
-import {projectMapping} from './config.js'
+import {projectsListText, projectMapping} from './config.js'
+
+// saveDataToLocalStorage('projectsListText', projectsListText);
+// saveDataToLocalStorage('projectMapping', projectMapping);
+
 
 let currentProjectData = projectMapping['Project1'];
 
@@ -49,24 +53,21 @@ function prepareAndCreateDate() {
 
 /* utility function that creates HTML elements 
    rest parameter allows for an indefinite number of arguments representing child elements 
-        the rest parameter arguments are treated as an array inside the function */
+        the rest parameter arguments get treated as an array inside the function */
 function createElement(type, properties, ...children) {
 
     // type is the type of HTML element to be created
     const element = document.createElement(type);
         
-    /* properties is an object containing key-value pairs where keys are property keys and values are 
-       property values to be set on the HTML element; iterates over each key in the properties object */
+    // properties is an object containing key-value pairs where values are property values to be set on the HTML element
     for (const key in properties) {
 
-        /* for each key, set the corresponding property value on the element
-           ex. if properties is {id: myElement, className: myClass}, 
+        /* for each key, set the corresponding property value on the element ex. if properties is {id: myElement, className: myClass}, 
            element will have its id set to myElement and its className set to myClass */
         element[key] = properties[key];
     }
         
-    /* iterates over the children array, and for each child,
-        appends the child to the parent element */
+    // iterates over the children array, and for each child, appends the child to the parent element 
     children.forEach(child => element.appendChild(child));
         
     return element;
@@ -98,8 +99,7 @@ function prepareAndCreateObjectData(obj, prepareAndCreateFunction) {
         // item is assigned the value of the current property being iterated over
         const item = obj[key];
 
-        /* calls prepareFunction, passing it the current key and its value, 
-           and pushes the result of the prepareFunction into the processedData array */
+        // calls prepareFunction, passing it the current key and its value, and pushes the result of the prepareFunction into the processedData array
         processedData.push(prepareAndCreateFunction(key, item));
     }
     return processedData;
@@ -110,9 +110,8 @@ function prepareAndCreateObjectData(obj, prepareAndCreateFunction) {
 function prepareAndCreateTitleData(key, item) {
     return {
     
-        /* processes the key-value pairs of a title object and then returns them
-            sets classes property for the object, sets the src property for an image associated with the current value,
-            sets the alt property for that image, sets text content, sets a class for the text */
+        /* processes the key-value pairs of a title object and then returns them, sets object's classes property, 
+           sets the src property for an image associated with the current value, sets the image's alt property, sets text content, sets a class for the text */
         classes: ["section", key, item.position],
         imageSrc: item.image,
         imageAlt: item.alt,
@@ -204,7 +203,7 @@ function appendButtons(buttonsData, container) {
     let newTaskButton = document.getElementById('new-task');
 
     // adds a click event listener to newTaskButton, and runs the createNewTask function when the button is clicked
-    newTaskButton.addEventListener('click', createNewTask);
+    newTaskButton.addEventListener('click', newTask);
 
     // saveTaskButton is assigned to the element whose id is 'save-task'
     let saveTaskButton = document.getElementById("save-task");
@@ -222,7 +221,9 @@ function appendButtons(buttonsData, container) {
    key is the unique identifier for the project; projectsListText is the object containing project names keyed
    by their unique identifiers; list is the DOM element to which the project list item will be appended; listAttributesData
    is the object containing data for setting attributes on the list item's  child elements, like an image */
-function createAndAppendProjectsList(key, projectsListText, list, listAttributesData) {
+function appendProjectsList(key, list, listAttributesData) {
+
+    let projectsListText = loadDataFromLocalStorage('projectsListText');
 
     // fetches the project name using the key from the projectsListText
     const projectName = projectsListText[key];
@@ -242,85 +243,110 @@ function createAndAppendProjectsList(key, projectsListText, list, listAttributes
     list.appendChild(projectDiv);
 }
 
+// creates projectData based on user input
+function prepareAndCreateProjectData(input, listAttributesData) {
 
-/* creates a project list item based on the user input and appends it to the DOM,
-   updates a project list object with the new project's name */
-   function prepareAndCreateNewProjectsListItem(projectsListText, input, listAttributesData) {
+    // checks if user input is empty
+    if (!input.value.trim()) return null;
 
-    // checks if the input element contains any value
-    if (input.value) {
+    // assigns a cleaned string to projectName
+    const projectName = input.value.trim();
 
-        // trims whitespace from the input value
-        const projectName = input.value.trim();
+    let projectsListText = loadDataFromLocalStorage('projectsListText');
 
-        /* generates a key for the new project by counting the current number of projects and adding one
-           this key is prefixed with p */
-        const nextKey = 'p' + (Object.keys(projectsListText).length + 1);
+    // generates a unique key for projectsListText for the new project by incrementing the total count of existing projects
+    const nextKey = `p${Object.keys(projectsListText).length + 1}`;
 
-        // determines the next key for projectMapping
-        const newProjectKey = `Project${Object.keys(projectMapping).length + 1}`;
+    let projectMapping = loadDataFromLocalStorage('projectMapping');
 
-        // adds the new project's name to projectsListText using the generated key
-        projectsListText[nextKey] = projectName;
+    // generates a unique key for projectMapping similar to nextKey
+    const newProjectKey = `Project${Object.keys(projectMapping).length + 1}`;
 
-        // adds a new netry to proejctMapping with detailed info about the new project
-        projectMapping[newProjectKey] = {
-            'Project': {
-                position: "middle",
-                image: listAttributesData.image,
-                alt: listAttributesData.alt,
-                text: projectName
-            }
-        };
+    // adds the new project name to projectsListText using nextKey
+    projectsListText[nextKey] = projectName;
 
-        /* saves the updated projectsListText and projectMapping objects to localStorage, ensuring persistence
-           across browser sessions */
-        saveDataToLocalStorage('projectsListText', projectsListText);
-        saveDataToLocalStorage('projectMapping', projectMapping);
+    /* creates a new project object with detailed information (position, image, alt text, project name) and
+       adds it to projectMapping using newProjectKey */
+    projectMapping[newProjectKey] = {
+        'Project': {
+            position: "middle",
+            image: listAttributesData.image,
+            alt: listAttributesData.alt,
+            text: projectName,
+        },
+    };
 
-        return {projectName, nextKey, image: listAttributesData.image, alt: listAttributesData.alt };
+    // persists the updated projectsListText and projectMapping to local storage to ensure data is saved across sessions
+    saveDataToLocalStorage('projectsListText', projectsListText);
+    saveDataToLocalStorage('projectMapping', projectMapping);
 
-    }
-
-    // return null if input is empty to signal no project was created
-    return null;
+    // returns an object containing the new project's data, ready for DOM manipulation
+    return {
+        projectName,
+        nextKey,
+        image: listAttributesData.image,
+        alt: listAttributesData.alt 
+    };
 }
 
-    
-/* accesses the input in the new-project field, return the li element, and appends the li element to the list ul element */
-function appendNewProjectName(projectsListText, input, list, listAttributesData, container) {
 
-    let projectData = prepareAndCreateNewProjectsListItem(projectsListText, input, listAttributesData);
+// manipulates the DOM using the project data created by prepareAndCreateProjectData
+function appendProjectData(projectData, list) {
 
+    // checks if projectData exists
+    if (!projectData) return;
+     
+    // destructures the projectData object to extract necessary details for DOM elements
+    const { projectName, nextKey, image, alt } = projectData; 
+
+    // creates an img element for the project and sets its src and alt attributes
+    const imgElement = document.createElement('img');
+    imgElement.src = image;
+    imgElement.alt = alt;
+
+    // creates a text node for the project name
+    const textNode = document.createTextNode(projectName);
+
+    // creates a list item li and assigns it to a class with the project's unique key
+    const listItem = document.createElement('li');
+    listItem.className = nextKey;
+
+    // appends the image element and text node as its children
+    listItem.appendChild(imgElement);
+    listItem.appendChild(textNode);
+
+    // appends the newly created list item to the provided list
+    list.appendChild(listItem);
+}
+
+
+// ties project data creation and project data DOM manipulation steps
+function appendNewProjectToList(input, list, listAttributesData, container) {
+
+    // creates the new project's data based on the user's input
+    const projectData = prepareAndCreateProjectData(input, listAttributesData);
+
+    // adds the created project data to the DOM, visualizing the new project in the list
+    appendProjectData(projectData, list);
+
+    // checks if project data was successfully created and added
     if (projectData) {
-        const { projectName, nextKey, image, alt } = projectData;
-        
-        // create the DOM elements for the new project
-        const projectItemImg = document.createElement('img');
-        projectItemImg.src = image;
-        projectItemImg.alt = alt;
 
-        const projectItemText = document.createTextNode(projectName);
-        const projectItemDiv = document.createElement('li');
-        projectItemDiv.className = nextKey;
-        projectItemDiv.appendChild(projectItemImg);
-        projectItemDiv.appendChild(projectItemText);
-        
-        // append the new project list item to the list
-        list.appendChild(projectItemDiv);
-
-        // re-initialize or update project selection functionality
-        selectProject(container, projectsListText, projectMapping);
+        // potentially update any relevant functionalities tied to the new project
+        selectProject(container);
     } else {
-        input.placeholder = "Enter project name.";
+
+        // if input was empty, sets the input field's placeholder to prompt the user for a project name
+        input.placeholder = "Enter new project name.";
     }
 
+    // clears input field after processing to prepare for the next input
     input.value = '';
 }
 
 
 // creates elements for the projects list and the new-project field
-function createAndAppendProjectsListAndField(projectsListText, listAttributesData, fieldAttributesData, container) {
+function appendProjectsListAndField(listAttributesData, fieldAttributesData, container) {
 
     // creates a div container for the projects list and sets its classes
     const listDiv = createElement('div', { 
@@ -330,9 +356,11 @@ function createAndAppendProjectsListAndField(projectsListText, listAttributesDat
     // creates a ul element for the projects list
     const list = createElement('ul');
 
+    let projectsListText = loadDataFromLocalStorage('projectsListText');
+
     // loops through projectsListText and calls createProjectListItem on each project/key to populate the projects list
     for (const key in projectsListText) {
-        createAndAppendProjectsList(key, projectsListText, list, listAttributesData);
+        appendProjectsList(key, list, listAttributesData);
     }
     
     // append the projects list to its container
@@ -368,21 +396,21 @@ function createAndAppendProjectsListAndField(projectsListText, listAttributesDat
     document.getElementById("new-project").addEventListener('click', function() {
 
         // adds the new project name to the projects list when the button is clicked
-        appendNewProjectName(projectsListText, input, list, listAttributesData, container);
+        appendNewProjectToList(input, list, listAttributesData, container);
     });
 
     // adds a keyup event listener to the input field to call appendNewProjectName when the Enter key is hit
     input.addEventListener('keyup', function (event) {
 
         if (event.key === 'Enter') {
-            appendNewProjectName(projectsListText, input, list, listAttributesData, container);
+            appendNewProjectToList(input, list, listAttributesData, container);
         }
     });
 }
     
 
 // creates elements for the tasks project title and tasks list 
-function createAndAppendTasksTitleAndList(projectData, container) {
+function appendTasksTitleAndList(projectData, container) {
 
     // clears any existing tasks list div before creating a new one
     const existingTasksListDiv = container.querySelector('.tasks-list');
@@ -396,7 +424,7 @@ function createAndAppendTasksTitleAndList(projectData, container) {
         const clearedTasksListDiv = document.createElement('div');
         clearedTasksListDiv.classList.add('middle');
         container.appendChild(clearedTasksListDiv);
-    }
+    } 
 
     // assigns tasksTitleData to the value/object associated with projectData['Project'] key
     const tasksTitleData = projectData['Project'];
@@ -515,7 +543,7 @@ function createAndAppendTasksTitleAndList(projectData, container) {
 
 
 // a prepareData function that processes the firstThreeTaskFields data and returns the processed data
-function prepareThreeTaskFieldsData(key, item) {
+function prepareAndCreateThreeTaskFieldsData(key, item) {
     return {
             class: key,
             labelFor: item.for,
@@ -530,7 +558,7 @@ function prepareThreeTaskFieldsData(key, item) {
 
 
 // a prepareData function that processes the priorityTaskField data and returns the processed data
-function preparePriorityTaskFieldData(key, item) {
+function prepareAndCreatePriorityTaskFieldData(key, item) {
     return {
             type: item.type,
             name: item.name,
@@ -545,7 +573,7 @@ function preparePriorityTaskFieldData(key, item) {
 
 
 // creates and appends four task fields and a label for the fourth field to the page container
-function createAndAppendTaskFields(threeTaskFieldsData, fieldLabel, priorityTaskFieldData, container) {
+function appendTaskFields(threeTaskFieldsData, fieldLabel, priorityTaskFieldData, container) {
 
     // creates a form container and sets its classes
     const formDiv = createElement('div', {
@@ -653,7 +681,7 @@ function createAndAppendTaskFields(threeTaskFieldsData, fieldLabel, priorityTask
 
 
 // creates and appends the status dropdown field to the page container
-function createAndAppendStatusTaskField(statusTaskFieldData) {
+function appendStatusTaskField(statusTaskFieldData) {
 
     // returns the form element
     const form = document.getElementById("form");
@@ -765,8 +793,8 @@ function populateFormFields(projectData, taskId) {
 }
 
 
-// creates a new task
-function createNewTask() {
+// creates a new task in the DOM
+function newTask() {
     isEditingTask = false;
     editingTaskId = null;
 
@@ -808,7 +836,10 @@ function createNewTask() {
 
 
 // creates the middle pane for a selected project; updates the displayed content accordingly
-function selectProject(container, projectsListText, projectMapping) {
+function selectProject(container) {
+
+    let projectsListText = loadDataFromLocalStorage('projectsListText');
+    let projectMapping = loadDataFromLocalStorage('projectMapping');
 
     // get an array of keys from the projectsListText object, then iterates over these keys
     Object.keys(projectsListText).forEach(key => {
@@ -840,106 +871,59 @@ function selectProject(container, projectsListText, projectMapping) {
                 currentProjectData = projectMapping ? projectMapping[`Project${projectIndex}`] : projectsListText[key];
 
                 // creates the list of tasks associated with the selected project and appends it to the page
-                createAndAppendTasksTitleAndList(currentProjectData, container);
+                appendTasksTitleAndList(currentProjectData, container);
             });
         }
     });
 }
 
 
-// factory function captures data from form inputs and constructs a task object when a new task is submitted
-function prepareAndCreateTaskData(projectData, taskId = null) {
+// gathers input data
+function gatherTaskInputs() {
 
-    const taskTitleInput = document.getElementById('each-task');
-    const taskDueDateInput = document.getElementById('task-duedate');
-    const taskDescriptionInput = document.getElementById('task-description');
-    const taskStatusSelect = document.getElementById('status-dropdown');
-    const priorityRadioInputs = document.querySelectorAll('input[type="radio"][name="priority"]');
-    const isPrioritySelected = Array.from(priorityRadioInputs).some(input => input.checked);
-
-    if (!taskTitleInput.value.trim() || 
-    !taskDueDateInput.value.trim() || 
-    !taskDescriptionInput.value.trim() || 
-    taskStatusSelect.selectedIndex === -1 || // Dropdown has no selection
-    !isPrioritySelected) { // No radio button is selected
-        taskTitleInput.placeholder = 'One or more inputs are blank or not selected.';
-        taskDescriptionInput.placeholder = 'One or more inputs are blank or not selected.';
-
-        // Handle the error condition: display a message, throw an error, or return null/undefined
-        return null; // Example action
-    }
-
-    // initializes an empty object to hold the task data
-    const taskData = {};
-
-    if (editingTaskId !== null && projectData[editingTaskId]) {
-        Object.assign(taskData, projectData[editingTaskId]);
-    }
-
-    // collects task title form form input
-    taskData['task-title'] = document.getElementById('each-task').value;
-    
-    // process the due date to the desired format
-    let taskDueDate = document.getElementById('task-duedate').value;
-    const date = new Date(taskDueDate + 'T00:00:00');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const year = date.getFullYear();
-    taskData['task-duedate'] = `${month}/${day}/${year}`;
-
-    // collects task description from form input
-    taskData['task-description'] = document.getElementById('task-description').value;
-
-    // determines the selected priority level
-    const radioInputs = document.querySelectorAll('input[type="radio"][name="priority"]');
-    taskData['priority-level'] = null;
-
-    for (const radioInput of radioInputs) {
-
-        if (radioInput.checked) {
-            const labelFor = radioInput.getAttribute('id');
-            const associatedLabel = document.querySelector(`label[for="${labelFor}"]`);
-            taskData['priority-level'] = associatedLabel.textContent.trim().toLowerCase();
-            break; // exits the loop once the selected option is found
-        }
-
-    }
-    // determines the selected task status
-    const taskStatus = document.getElementById('status-dropdown');
-    taskData['status'] = taskStatus.options[taskStatus.selectedIndex].value;
-
-    // adds a static value for 'task-edit'
-    taskData['task-edit'] = "Edit";
-
-    // if (editingTaskId) {
-    //     projectData[editingTaskId] = taskData;
-    // } else {
-    //     const newTaskId = findLastTaskId(projectData) + 1;
-    //     projectData[newTaskId] = taskData;
-    // }
-
-    // returns the populated task data object
-    return taskData;
+    // retrieves user inputs from their respective DOM elements, and returns an object containing all these values
+    return {
+    taskTitle: document.getElementById('each-task').value.trim(),
+    taskDueDate: document.getElementById('task-duedate').value.trim(),
+    taskDescription: document.getElementById('task-description').value.trim(),
+    taskStatus: document.getElementById('status-dropdown').value,
+    priorityLevel: document.querySelector('input[type="radio"][name="priority"]:checked') ? document.querySelector('input[type="radio"][name="priority"]:checked').nextElementSibling.textContent.trim().toLowerCase() : ''
+    };
 }
 
 
-// finds the highest numeric key within the projectData object and returns it
-function findLastTaskId(projectData) {
+// creates task data from inputs
+function prepareAndCreateTaskData(inputs) {
 
+    // checks if any of the fields are missing or blank
+    if (!inputs.taskTitle || !inputs.taskDueDate || !inputs.taskDescription || !inputs.taskStatus || !inputs.priorityLevel) {
+        alert("One or more inputs are blank or are not selected.");
+        return;
+    }
+
+    // converts task due date into a Date object and formats it into a more readable string
+    const date = new Date(inputs.taskDueDate + 'T00:00:00');
+    const formattedDueDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+
+    // returns a new task object with keys matching a structured task data format
+    return {
+        'task-title': inputs.taskTitle,
+        'task-duedate': formattedDueDate,
+        'task-description': inputs.taskDescription,
+        'priority-level': inputs.priorityLevel,
+        'status': inputs.taskStatus,
+        'task-edit': "Edit",
+    };
+}
+
+
+function findLastTaskId(projectData) {
     let lastId = 0;
 
-    /* creates an array of the object's keys, then iterates over these keys; for each key in projectData, the anonymous
-       function is called with the current key passed */
     Object.keys(projectData).forEach(key => {
-
-        /* attempts to convert the current key to an integer using parseInt; specifying that the conversion
-           should be done assuming a decimal number system */
         const currentId = parseInt(key, 10);
 
-        /* checks if currentId is not NaN and whether currentId is greater than lastId */
         if (!isNaN(currentId) && currentId > lastId) {
-
-            // updates lastId to currentId
             lastId = currentId;
         }
     });
@@ -947,46 +931,65 @@ function findLastTaskId(projectData) {
 }
 
 
-/* creates a new task and updates an existing one based on the editing state and appends the updated task list
-   to a container and saves the data to local storage */
+// updates projectData structure
+function prepareAndCreateTaskInProjectData(projectData) {
+
+    // collect form input data
+    const inputs = gatherTaskInputs();
+
+    // creates a structured task object from these inputs
+    const taskData = prepareAndCreateTaskData(inputs);
+
+    if (taskData) {
+        // if editing an existing task
+        if (editingTaskId !== null) {
+
+            // updates the corresponding task in project data with the newly created task object
+            projectData[editingTaskId] = taskData;
+
+            saveDataToLocalStorage('projectData', projectData);
+
+        // if creating a new task
+        } else {
+
+            // generates a new task Id based on the current size of projectData and adds the task object to projectData using the new Id
+            const newTaskId = (Object.keys(projectData).length - 1).toString();
+            projectData[newTaskId] = taskData;
+
+            saveDataToLocalStorage('projectData', projectData);
+        }
+
+        const projectName = projectData.Project.text;
+        const formattedProjectName = projectName.replace(' ', '');
+        projectMapping[formattedProjectName] = projectData;
+
+        saveDataToLocalStorage('projectMapping', projectMapping);
+    }
+}
+
+
+// ties project data creation and project data DOM manipulation steps
 function appendTask(projectData, container) {
 
     // retrieves a link element for a stylesheet 
     let stylesheet = document.getElementById('stylesheetToSwitch');
 
     // checks if the current stylesheet has three panes
-    if (stylesheet.href.endsWith('style.css')) {
+    if (stylesheet.href.endsWith('style.css')) { 
 
-        let taskData;
+        // updates projectData structure
+        prepareAndCreateTaskInProjectData(projectData);
 
-        /* checks if the task is currently being edited, and whether editingTaskId is not null */
-        if (isEditingTask && editingTaskId !== null) {
+        // creates elements for the tasks project title and tasks list 
+        appendTasksTitleAndList(projectData, container);
 
-            // gets the updated task data for the task being edited
-            taskData = prepareAndCreateTaskData(projectData, editingTaskId);
+        // saves project items and tasks to localStorage every time new data is created or updated
+        saveDataToLocalStorage('projectData', projectData);
 
-            // updates the task in projectData at editingTaskId with the new taskData
-            projectData[editingTaskId] = taskData;
-
-        } else {
-
-            // handles the scenario where a new task is being added rather than an existing one being edited
-            taskData = prepareAndCreateTaskData(projectData);
-
-            // determines the highest numerical ID currently used in projectData
-            let lastTaskId = findLastTaskId(projectData);
-
-            // increments lastTaskId by 1 to generate a unique ID for the new task
-            lastTaskId = lastTaskId + 1;
-
-            // adds the new task to projectData using the incremented lastTaskId as the key
-            projectData[lastTaskId] = taskData;
-        }
-
-        createAndAppendTasksTitleAndList(projectData, container);
-        saveDataToLocalStorage(projectData);
+        // switches stylesheet back to having two panes
+        // stylesheet.href = 'style2.css';
     }
 }
 
 
-export { prepareAndCreateDate, appendDate, prepareAndCreateObjectData, prepareAndCreateTitleData, appendTitles, prepareAndCreateButtonData, appendButtons, createAndAppendProjectsListAndField, createAndAppendTasksTitleAndList, prepareThreeTaskFieldsData, preparePriorityTaskFieldData, createAndAppendTaskFields, createAndAppendStatusTaskField, selectProject  };
+export { loadDataFromLocalStorage, prepareAndCreateDate, appendDate, prepareAndCreateObjectData, prepareAndCreateTitleData, appendTitles, prepareAndCreateButtonData, appendButtons, appendProjectsListAndField, appendTasksTitleAndList, prepareAndCreateThreeTaskFieldsData, prepareAndCreatePriorityTaskFieldData, appendTaskFields, appendStatusTaskField, selectProject  };

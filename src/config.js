@@ -31,6 +31,11 @@ const buttons = {
         id: "new-project",
         text: "+ New Project"
     },
+    'delete-project': {
+        position: "left",
+        id: "delete-project",
+        text: "Delete Project"
+    },
     'new-task': {
         position: "middle",
         id: "new-task",
@@ -40,8 +45,12 @@ const buttons = {
         position: "right",
         id: "save-task",
         text: "Save"
+    },
+    'delete-task': {
+        position: "right",
+        id: "delete-task",
+        text: "Delete Task"
     }
-
 }
 
 
