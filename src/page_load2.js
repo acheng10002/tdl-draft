@@ -1,6 +1,6 @@
 import {projectsListText, projectMapping} from './config.js'
 
-// saveDataToLocalStorage('projectsListText', projectsListText);
+saveDataToLocalStorage('projectsListText', projectsListText);
 // saveDataToLocalStorage('projectMapping', projectMapping);
 
 
@@ -227,6 +227,8 @@ function appendProjectsList(key, list, listAttributesData) {
 
     // fetches the project name using the key from the projectsListText
     const projectName = projectsListText[key];
+
+    // saveDataToLocalStorage('projectsListText', projectsListText);
     
     // creates and configures the arrow pointing right image, the icon associated with each project
     let img = createElement('img');
@@ -265,6 +267,8 @@ function prepareAndCreateProjectData(input, listAttributesData) {
     // adds the new project name to projectsListText using nextKey
     projectsListText[nextKey] = projectName;
 
+    saveDataToLocalStorage('projectsListText', projectsListText);
+
     /* creates a new project object with detailed information (position, image, alt text, project name) and
        adds it to projectMapping using newProjectKey */
     projectMapping[newProjectKey] = {
@@ -276,8 +280,7 @@ function prepareAndCreateProjectData(input, listAttributesData) {
         },
     };
 
-    // persists the updated projectsListText and projectMapping to local storage to ensure data is saved across sessions
-    saveDataToLocalStorage('projectsListText', projectsListText);
+    // persists the updated projectMapping to local storage to ensure data is saved across sessions
     saveDataToLocalStorage('projectMapping', projectMapping);
 
     // returns an object containing the new project's data, ready for DOM manipulation
@@ -287,6 +290,33 @@ function prepareAndCreateProjectData(input, listAttributesData) {
         image: listAttributesData.image,
         alt: listAttributesData.alt 
     };
+}
+
+
+// data function
+function deleteTask(projectData, editingTaskId, container) {
+
+    if (editingTaskId !== null) {
+        delete projectData[editingTaskId];
+
+        editingTaskId = null;
+
+        appendTasksTitleAndList(projectData, container);
+
+    } else {
+        alert("No task selected or task does not exist.");
+    }
+
+    const stylesheet = document.getElementById('stylesheetToSwitch');
+    
+    if (stylesheet.href.endsWith('style.css')) {
+        stylesheet.href = 'style2.css';
+    }
+
+    return projectData;
+
+    // saveDataToLocalStorage('projectData', projectData);
+    // saveDataToLocalStorage('projectData', projectMapping);
 }
 
 
@@ -337,7 +367,7 @@ function appendNewProjectToList(input, list, listAttributesData, container) {
     } else {
 
         // if input was empty, sets the input field's placeholder to prompt the user for a project name
-        input.placeholder = "Enter new project name.";
+        alert("Enter new project name.");
     }
 
     // clears input field after processing to prepare for the next input
@@ -356,9 +386,23 @@ function appendProjectsListAndField(listAttributesData, fieldAttributesData, con
     // creates a ul element for the projects list
     const list = createElement('ul');
 
-    let projectsListText = loadDataFromLocalStorage('projectsListText');
+    let projectListText = loadDataFromLocalStorage('projectsListText');
 
-    // loops through projectsListText and calls createProjectListItem on each project/key to populate the projects list
+    let projectMapping = loadDataFromLocalStorage('projectMapping');
+
+    Object.keys(projectMapping).forEach(projectKey => {
+        const projectIndex = projectKey.replace('Project', '');
+        const projectTextKey = `p${projectIndex}`;
+        if (!projectsListText.hasOwnProperty(projectTextKey)) {
+            const projectName = projectMapping[projectKey].Project.text;
+            projectsListText[projectTextKey] = projectName;
+            saveDataToLocalStorage('projectsListText', projectsListText);
+        }
+    })
+
+    projectListText = loadDataFromLocalStorage('projectsListText');
+
+    // loops through projectsListText and calls appendProjectsList on each project/key to populate the projects list
     for (const key in projectsListText) {
         appendProjectsList(key, list, listAttributesData);
     }
@@ -426,6 +470,8 @@ function appendTasksTitleAndList(projectData, container) {
         container.appendChild(clearedTasksListDiv);
     } 
 
+    // projectData = loadDataFromLocalStorage('projectData');
+
     // assigns tasksTitleData to the value/object associated with projectData['Project'] key
     const tasksTitleData = projectData['Project'];
 
@@ -489,6 +535,19 @@ function appendTasksTitleAndList(projectData, container) {
             
             populateFormFields(projectData, editingTaskId);
 
+            let deleteTaskButton = document.getElementById('delete-task');
+
+            deleteTaskButton.addEventListener('click', () => {
+                projectData = deleteTask(projectData, editingTaskId, container);
+
+                saveDataToLocalStorage('projectData', projectData);
+
+                const projectName = projectData.Project.text;
+                const formattedProjectName = projectName.replace(' ', '');
+                projectMapping[formattedProjectName] = projectData;
+
+                saveDataToLocalStorage('projectMapping', projectMapping);
+            });
         });
 
         // creates a div for the task title key's value and sets its class and text content
@@ -719,7 +778,7 @@ function appendStatusTaskField(statusTaskFieldData) {
 
 // switches from two panes to three panes 
 function switchStylesheet() {
-    var stylesheet = document.getElementById('stylesheetToSwitch');
+    const stylesheet = document.getElementById('stylesheetToSwitch');
 
     if (stylesheet.href.endsWith('style2.css')) {
         stylesheet.href = 'style.css';
@@ -985,6 +1044,8 @@ function appendTask(projectData, container) {
 
         // saves project items and tasks to localStorage every time new data is created or updated
         saveDataToLocalStorage('projectData', projectData);
+
+        saveDataToLocalStorage('projectMapping', projectMapping);
 
         // switches stylesheet back to having two panes
         // stylesheet.href = 'style2.css';
