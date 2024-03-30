@@ -1,4 +1,5 @@
 const projectsListText = {
+    // pd: "Project Default",
     p1: "Project 1",
     p2: "Project 2",
     p3: "Project 3",
@@ -66,6 +67,16 @@ const newProjectFieldAttributes = {
     id: "add-new-project",
     placeholder: "+ New Project"
 }
+
+
+// const ProjectD = {
+//     'Project': {
+//         position: "middle",
+//         image: "./img/folder-arrow-down.svg",
+//         alt: "arrow pointing right icon",
+//         text: "Project 1"
+//     }
+// }
 
 
 const Project1 = {
@@ -247,6 +258,7 @@ const Project5 = {
 
 
 const projectMapping = {
+    // ProjectD: ProjectD,
     Project1: Project1,
     Project2: Project2,
     Project3: Project3,

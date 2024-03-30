@@ -1,13 +1,14 @@
-import {projectsListText, projectMapping} from './config.js'
+import {projectsListText, projectMapping, projectsListAttributes, newProjectFieldAttributes} from './config.js'
 
 saveDataToLocalStorage('projectsListText', projectsListText);
 // saveDataToLocalStorage('projectMapping', projectMapping);
-
 
 let currentProjectData = projectMapping['Project1'];
 
 let isEditingTask = false;
 let editingTaskId = null;
+
+let selectedProjectData = null;
 
 
 /* saves project items and tasks to localStorage every time new data is created or updated
@@ -206,13 +207,18 @@ function appendButtons(buttonsData, container) {
     newTaskButton.addEventListener('click', newTask);
 
     // saveTaskButton is assigned to the element whose id is 'save-task'
-    let saveTaskButton = document.getElementById("save-task");
+    let saveTaskButton = document.getElementById('save-task');
     
     // adds a click event listener to saveTaskButton, and runs the createAndAppendTask function when the button is clicked 
     saveTaskButton.addEventListener('click', () => {
 
-        appendTask(currentProjectData, container);
+        appendTask(selectedProjectData, container);
+    });
 
+    let deleteProjectButton = document.getElementById("delete-project");
+    
+    deleteProjectButton.addEventListener('click', function() {
+        deleteProject(selectedProjectData, container);
     });
 }
 
@@ -221,7 +227,7 @@ function appendButtons(buttonsData, container) {
    key is the unique identifier for the project; projectsListText is the object containing project names keyed
    by their unique identifiers; list is the DOM element to which the project list item will be appended; listAttributesData
    is the object containing data for setting attributes on the list item's  child elements, like an image */
-function appendProjectsList(key, list, listAttributesData) {
+function appendProjectsList(key, list, listAttributesData, container) {
 
     let projectsListText = loadDataFromLocalStorage('projectsListText');
 
@@ -240,6 +246,12 @@ function appendProjectsList(key, list, listAttributesData) {
 
     // creates li element and appends img element and text node as children
     let projectDiv = createElement('li', { className: key }, img, textNode); 
+
+    projectDiv.addEventListener("click", () => {
+        let projectKey = projectName.replace(" ", "");
+        selectedProjectData = projectMapping[projectKey];
+        appendTasksTitleAndList(selectedProjectData, container);
+    });
 
     // appends the newly created li element to the ul element
     list.appendChild(projectDiv);
@@ -292,6 +304,79 @@ function prepareAndCreateProjectData(input, listAttributesData) {
     };
 }
 
+// data function
+function deleteProject(projectData, container) {
+
+    if (projectData) {
+        let projectsListText = loadDataFromLocalStorage('projectsListText');
+        let projectMapping = loadDataFromLocalStorage('projectMapping');
+
+        let projectName = projectData['Project'].text;
+
+        let formattedProjectName = projectName.replace(/\s/g, '');
+
+        delete projectMapping[formattedProjectName];
+
+        let keyToDelete = Object.keys(projectsListText).find(key => projectsListText[key] === projectName);
+
+        if (keyToDelete) {
+            delete projectsListText[keyToDelete];
+        }
+
+        saveDataToLocalStorage('projectMapping', projectMapping);
+
+        console.log(projectMapping);
+
+        saveDataToLocalStorage('projectsListText', projectsListText);
+
+        selectProject(container);
+
+        projectsListText = loadDataFromLocalStorage('projectsListText');
+
+        projectMapping = loadDataFromLocalStorage('projectMapping');
+
+        const keys = Object.keys(projectMapping);
+
+        if (keys.length > 0) {
+            const firstKey = keys[0];
+            const firstProjectData = projectMapping[firstKey];
+        
+            // creates the list of tasks associated with the selected project and appends it to the page
+            appendProjectsListAndField(projectsListAttributes, newProjectFieldAttributes, container);
+
+            // selectProject(container);
+
+            appendTasksTitleAndList(firstProjectData, container);
+
+        // Object.keys(projectsListText).forEach(key => {
+        
+        //     // extracts the numeric part of the key by removing the first character "p"
+        //     const projectIndex = key.substring(1);
+    
+        //     // tries to find a clickable DOM element with a class matching the current key (.p1, .p2, etc.)
+        //     const projectTitleDiv = document.querySelector(`.${key}`);
+    
+        //         // checks if the projectTitleDiv was successfully found
+        //         if (projectTitleDiv) {
+            
+        //             // adds an event listener to the projectTitleDiv that triggers a function when the element is clicked
+        //             projectTitleDiv.addEventListener('click', () => {
+            
+        //             switchToTwoPanes();
+            
+        //             selectedProjectData = projectMapping ? projectMapping[`Project${projectIndex}`] : projectsListText[key];
+            
+        //             appendTasksTitleAndList(selectedProjectData, container);
+        //             });
+        //         }
+            // appendTasksTitleAndList(firstProjectData, container);
+    
+            // selectProject(container);
+        // });
+        }
+    }
+}
+
 
 // data function
 function deleteTask(projectData, editingTaskId, container) {
@@ -304,14 +389,10 @@ function deleteTask(projectData, editingTaskId, container) {
         appendTasksTitleAndList(projectData, container);
 
     } else {
-        alert("No task selected or task does not exist.");
+        switchToTwoPanes();
     }
 
-    const stylesheet = document.getElementById('stylesheetToSwitch');
-    
-    if (stylesheet.href.endsWith('style.css')) {
-        stylesheet.href = 'style2.css';
-    }
+    switchToTwoPanes();
 
     return projectData;
 
@@ -386,7 +467,7 @@ function appendProjectsListAndField(listAttributesData, fieldAttributesData, con
     // creates a ul element for the projects list
     const list = createElement('ul');
 
-    let projectListText = loadDataFromLocalStorage('projectsListText');
+    let projectsListText = loadDataFromLocalStorage('projectsListText');
 
     let projectMapping = loadDataFromLocalStorage('projectMapping');
 
@@ -400,11 +481,11 @@ function appendProjectsListAndField(listAttributesData, fieldAttributesData, con
         }
     })
 
-    projectListText = loadDataFromLocalStorage('projectsListText');
+    projectsListText = loadDataFromLocalStorage('projectsListText');
 
     // loops through projectsListText and calls appendProjectsList on each project/key to populate the projects list
     for (const key in projectsListText) {
-        appendProjectsList(key, list, listAttributesData);
+        appendProjectsList(key, list, listAttributesData, container);
     }
     
     // append the projects list to its container
@@ -472,134 +553,136 @@ function appendTasksTitleAndList(projectData, container) {
 
     // projectData = loadDataFromLocalStorage('projectData');
 
-    // assigns tasksTitleData to the value/object associated with projectData['Project'] key
-    const tasksTitleData = projectData['Project'];
+    if (projectData) {
 
-    // creates a div for the title and sets it classes
-    const titleDiv = createElement('div', {
-        className: "section project-title tasks-list-project " + tasksTitleData.position
-    });
+        // assigns tasksTitleData to the value/object associated with projectData['Project'] key
+        let tasksTitleData = projectData['Project'];
 
-    // creates img element of the folder plus down-pointing arrow icon and sets its src and alt attributes 
-    const img = createElement('img', {
-        src: tasksTitleData.image, 
-        alt: tasksTitleData.alt
-    });
-
-    // creates div for the title's text content and sets the div's id
-    const textDiv = createElement('div', {
-        textContent: tasksTitleData.text
-    });
-
-    // appends the img and text div elements to their title container
-    titleDiv.appendChild(img);
-    titleDiv.appendChild(textDiv);
-
-    container.appendChild(titleDiv);
-
-    // creates a div container for all the tasks in the list
-    const tasksListDiv = createElement('div', {
-        className: 'section tasks-list middle'
-    });
-
-    // iterates through keys/objects inside the projectData object
-    for (let taskKey in projectData) {
-
-        // move on if the key is Project (which contains properties for the title)
-        if (taskKey === 'Project') continue;
-
-        // data assigned to the value/object associated with projectData[taskKey]
-        let data = projectData[taskKey];
-
-        /* creates a div container for "Edit", task title, "Task Description", "Task Due Date", 
-        "Priority Level", and "Status" elements and sets its class and id */
-        let taskDiv = createElement('div', {
-            className: 'task',
-            id: taskKey
+        // creates a div for the title and sets it classes
+        const titleDiv = createElement('div', {
+            className: "section project-title tasks-list-project " + tasksTitleData.position
         });
 
-        // creates a div for "Edit" and sets its class and text content
-        let taskEditDiv = createElement('div', {
-            className: "task-edit",
-            textContent: data["task-edit"]
+        // creates img element of the folder plus down-pointing arrow icon and sets its src and alt attributes 
+        const img = createElement('img', {
+            src: tasksTitleData.image, 
+            alt: tasksTitleData.alt
         });
 
-        // adds a click event listener to the Edit div element
-        taskEditDiv.addEventListener('click', function() {
-            
-            // when Edit is clicked, run populateFormFields to populate the task form fields with values from the object
-            isEditingTask = true;
-            editingTaskId = this.parentElement.getAttribute('id');
-            
-            switchStylesheet();
-            
-            populateFormFields(projectData, editingTaskId);
+        // creates div for the title's text content and sets the div's id
+        const textDiv = createElement('div', {
+            textContent: tasksTitleData.text
+        });
 
-            let deleteTaskButton = document.getElementById('delete-task');
+        // appends the img and text div elements to their title container
+        titleDiv.appendChild(img);
+        titleDiv.appendChild(textDiv);
 
-            deleteTaskButton.addEventListener('click', () => {
-                projectData = deleteTask(projectData, editingTaskId, container);
+        container.appendChild(titleDiv);
 
-                saveDataToLocalStorage('projectData', projectData);
+        // creates a div container for all the tasks in the list
+        const tasksListDiv = createElement('div', {
+            className: 'section tasks-list middle'
+        });
 
-                const projectName = projectData.Project.text;
-                const formattedProjectName = projectName.replace(' ', '');
-                projectMapping[formattedProjectName] = projectData;
+        // iterates through keys/objects inside the projectData object
+        for (let taskKey in projectData) {
 
-                saveDataToLocalStorage('projectMapping', projectMapping);
+            // move on if the key is Project (which contains properties for the title)
+            if (taskKey === 'Project') continue;
+
+            // data assigned to the value/object associated with projectData[taskKey]
+            let data = projectData[taskKey];
+
+            /* creates a div container for "Edit", task title, "Task Description", "Task Due Date", 
+            "Priority Level", and "Status" elements and sets its class and id */
+            let taskDiv = createElement('div', {
+                className: 'task',
+                id: taskKey
             });
-        });
 
-        // creates a div for the task title key's value and sets its class and text content
-        let taskTitleDiv = createElement('div', {
-            className: "task-title",
-            textContent: data["task-title"]
-        })
+            // creates a div for "Edit" and sets its class and text content
+            let taskEditDiv = createElement('div', {
+                className: "task-edit",
+                textContent: data["task-edit"]
+            });
 
-        // creates a div for "Task Description" and sets its class and text content
-        let taskDescriptionDiv = createElement('div', {
-            className: "task-description",
-            textContent: data["task-description"]
-        });
+            // adds a click event listener to the Edit div element
+            taskEditDiv.addEventListener('click', function() {
+            
+                // when Edit is clicked, run populateFormFields to populate the task form fields with values from the object
+                isEditingTask = true;
+                editingTaskId = this.parentElement.getAttribute('id');
+            
+                switchToThreePanes();
+            
+                populateFormFields(projectData, editingTaskId);
 
-        /* creates a div for "Task Due Date" and sets its text content and 
-            sets its color class based on the value of its priority-level property */
-        let taskDueDateDiv = createElement('div', {
+                let deleteTaskButton = document.getElementById('delete-task');
 
-        /* if the priority-level is high, set its color class to red 
-           if the priority-level is medium, set its color class to yellow
-           if the priority-level is low, set its color class to green */
-            className: `task-duedate ${data["priority-level"] === "high" ? "red" : data["priority-level"] === "medium" ? "yellow" : "green"}`,
-            textContent: data["task-duedate"]
-        });
+                deleteTaskButton.addEventListener('click', () => {
+                    projectData = deleteTask(projectData, editingTaskId, container);
 
-        // creates a div for "Priority Level", and sets its text content and classes, including the hide class
-        let priorityLevelDiv = createElement('div', {
-            className: `priority-level hide`,
-            textContent: data["priority-level"]
-        });
+                    saveDataToLocalStorage('projectData', projectData);
 
-        // creates a div for "Status" and sets its text content and classes, including the hide class
-        let statusDiv = createElement('div', {
-            className: `status hide`,
-            textContent: data["status"]
-        });
+                    const projectName = projectData.Project.text;
+                    const formattedProjectName = projectName.replace(' ', '');
+                    projectMapping[formattedProjectName] = projectData;
 
-        // appends 4 shown elements and 2 hidden elements to the task container
-        taskDiv.appendChild(taskEditDiv);
-        taskDiv.appendChild(taskTitleDiv);
-        taskDiv.appendChild(taskDescriptionDiv);
-        taskDiv.appendChild(taskDueDateDiv);
-        taskDiv.appendChild(priorityLevelDiv);
-        taskDiv.appendChild(statusDiv);
+                    saveDataToLocalStorage('projectMapping', projectMapping);
+                });
+            });
 
-        // appends the task container to the div container with the tasks list
-        tasksListDiv.appendChild(taskDiv);
+            // creates a div for the task title key's value and sets its class and text content
+            let taskTitleDiv = createElement('div', {
+                className: "task-title",
+                textContent: data["task-title"]
+            })
 
-        container.appendChild(tasksListDiv);
+            // creates a div for "Task Description" and sets its class and text content
+            let taskDescriptionDiv = createElement('div', {
+                className: "task-description",
+                textContent: data["task-description"]
+            });
+
+            /* creates a div for "Task Due Date" and sets its text content and 
+                sets its color class based on the value of its priority-level property */
+            let taskDueDateDiv = createElement('div', {
+
+            /* if the priority-level is high, set its color class to red 
+            if the priority-level is medium, set its color class to yellow
+            if the priority-level is low, set its color class to green */
+                className: `task-duedate ${data["priority-level"] === "high" ? "red" : data["priority-level"] === "medium" ? "yellow" : "green"}`,
+                textContent: data["task-duedate"]
+            });
+
+            // creates a div for "Priority Level", and sets its text content and classes, including the hide class
+            let priorityLevelDiv = createElement('div', {
+                className: `priority-level hide`,
+                textContent: data["priority-level"]
+            });
+
+            // creates a div for "Status" and sets its text content and classes, including the hide class
+            let statusDiv = createElement('div', {
+                className: `status hide`,
+                textContent: data["status"]
+            });
+
+            // appends 4 shown elements and 2 hidden elements to the task container
+            taskDiv.appendChild(taskEditDiv);
+            taskDiv.appendChild(taskTitleDiv);
+            taskDiv.appendChild(taskDescriptionDiv);
+            taskDiv.appendChild(taskDueDateDiv);
+            taskDiv.appendChild(priorityLevelDiv);
+            taskDiv.appendChild(statusDiv);
+
+            // appends the task container to the div container with the tasks list
+            tasksListDiv.appendChild(taskDiv);
+
+            container.appendChild(tasksListDiv);
         }
+    }
 }
-
 
 // a prepareData function that processes the firstThreeTaskFields data and returns the processed data
 function prepareAndCreateThreeTaskFieldsData(key, item) {
@@ -777,11 +860,20 @@ function appendStatusTaskField(statusTaskFieldData) {
 
 
 // switches from two panes to three panes 
-function switchStylesheet() {
+function switchToThreePanes() {
     const stylesheet = document.getElementById('stylesheetToSwitch');
 
     if (stylesheet.href.endsWith('style2.css')) {
         stylesheet.href = 'style.css';
+    }
+} 
+
+// switches from two panes to three panes 
+function switchToTwoPanes() {
+    const stylesheet = document.getElementById('stylesheetToSwitch');
+
+    if (stylesheet.href.endsWith('style.css')) {
+        stylesheet.href = 'style2.css';
     }
 } 
 
@@ -858,7 +950,7 @@ function newTask() {
     editingTaskId = null;
 
     // switches from two panes to three panes
-    switchStylesheet();
+    switchToThreePanes();
 
     // returns all the task fields and makes their values empty strings 
     let eachTaskField = document.getElementById('each-task');
@@ -891,6 +983,10 @@ function newTask() {
     if (statusSelect) {
         statusSelect.selectedIndex = 0;
     }
+
+    let deleteTaskButton = document.getElementById('delete-task');
+
+    deleteTaskButton.addEventListener('click', switchToTwoPanes);
 }
 
 
@@ -915,22 +1011,12 @@ function selectProject(container) {
             // adds an event listener to the projectTitleDiv that triggers a function when the element is clicked
             projectTitleDiv.addEventListener('click', () => {
 
-                // retrieves the DOM element with the id 'stylesheetToSwitch'
-                let stylesheet = document.getElementById('stylesheetToSwitch');
+                switchToTwoPanes();
 
-                // switches the page's layout/styling to reflect that a project has been selected 
-                if (stylesheet.href.endsWith('style.css')) {
-                    stylesheet.href = 'style2.css';
-                }
+                selectedProjectData = projectMapping ? projectMapping[`Project${projectIndex}`] : projectsListText[key];
 
-                /* if projectMapping is defined, uses projectIndex to retrieve the corresponding project's data
-                   from projectMapping 
-                   if projectMapping is not defined or doesn't contain the key, it falls back to using the value from
-                   projectsListText[key] */
-                currentProjectData = projectMapping ? projectMapping[`Project${projectIndex}`] : projectsListText[key];
+                appendTasksTitleAndList(selectedProjectData, container);
 
-                // creates the list of tasks associated with the selected project and appends it to the page
-                appendTasksTitleAndList(currentProjectData, container);
             });
         }
     });
@@ -956,7 +1042,7 @@ function prepareAndCreateTaskData(inputs) {
 
     // checks if any of the fields are missing or blank
     if (!inputs.taskTitle || !inputs.taskDueDate || !inputs.taskDescription || !inputs.taskStatus || !inputs.priorityLevel) {
-        alert("One or more inputs are blank or are not selected.");
+        alert("One or more inputs are blank or not selected.");
         return;
     }
 
@@ -1048,7 +1134,7 @@ function appendTask(projectData, container) {
         saveDataToLocalStorage('projectMapping', projectMapping);
 
         // switches stylesheet back to having two panes
-        // stylesheet.href = 'style2.css';
+        switchToTwoPanes();
     }
 }
 
