@@ -228,5 +228,10 @@ li,
 
 .right {
     display: none;
+    background-color: #fafafa;
+}
+
+.new-right {
+    background-color: #fafafa;
 }
 

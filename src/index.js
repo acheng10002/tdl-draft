@@ -1,6 +1,8 @@
 import { titles, buttons, projectsListAttributes, newProjectFieldAttributes, firstThreeTaskFields, priorityTaskFieldLabel, priorityTaskField, statusTaskField } from './config.js';
 
-import { loadDataFromLocalStorage, prepareAndCreateDate, appendDate, prepareAndCreateObjectData, prepareAndCreateTitleData, appendTitles, prepareAndCreateButtonData, appendButtons, appendProjectsListAndField, appendTasksTitleAndList, prepareAndCreateThreeTaskFieldsData, prepareAndCreatePriorityTaskFieldData, appendTaskFields, appendStatusTaskField, selectProject } from './page_load2.js';
+import { initializeProjectData, loadDataFromLocalStorage, prepareAndCreateDate, appendDate, prepareAndCreateObjectData, prepareAndCreateTitleData, appendTitles, prepareAndCreateButtonData, appendButtons, appendProjectsListAndField, appendTasksTitleAndList, prepareAndCreateThreeTaskFieldsData, prepareAndCreatePriorityTaskFieldData, appendTaskFields, appendStatusTaskField } from './page_load2.js';
+
+initializeProjectData();
 
 let projectMapping = loadDataFromLocalStorage('projectMapping');
 
@@ -20,26 +22,23 @@ appendDate(processedDate, pageInfo);
 const processedTitles = prepareAndCreateObjectData(titles, prepareAndCreateTitleData);
 appendTitles(processedTitles, pageInfo);
 
-/* NEW PROJECT, NEW TASK, AND SAVE BUTTONS (SAVE BUTTON IS INITIALLY HIDDEN)ß
+/* NEW PROJECT, NEW TASK, AND SAVE BUTTONS (SAVE BUTTON IS INITIALLY HIDDEN)
    creates elements for processed buttons data and appends them to the 'content' div */
 let processedButtons = prepareAndCreateObjectData(buttons, prepareAndCreateButtonData);
-appendButtons(processedButtons, pageInfo);
+appendButtons(processedButtons, projectsListAttributes, newProjectFieldAttributes, pageInfo);
 
 // PROJECTS LIST AND NEW PROJECT FIELD ON LEFT PANE
 appendProjectsListAndField(projectsListAttributes, newProjectFieldAttributes, pageInfo);
 
 // TASKS TITLE AND LIST ON MIDDLE PANE
-appendTasksTitleAndList(projectMapping['Project1'], pageInfo);
+appendTasksTitleAndList(projectMapping['Project1'], projectsListAttributes, newProjectFieldAttributes, pageInfo);
 
+// TASK FIELDS ON RIGHT PANE
 const processedThreeTaskFields = prepareAndCreateObjectData(firstThreeTaskFields, prepareAndCreateThreeTaskFieldsData);
-const processedPriorityTaskField = prepareAndCreateObjectData(priorityTaskField, prepareAndCreatePriorityTaskFieldData)
+const processedPriorityTaskField = prepareAndCreateObjectData(priorityTaskField, prepareAndCreatePriorityTaskFieldData);
 appendTaskFields(processedThreeTaskFields, priorityTaskFieldLabel, processedPriorityTaskField, pageInfo);
 
 appendStatusTaskField(statusTaskField);
 
-/* ADDS EVENT LISTENER TO EACH PROJECT NAME AND CHANGES TASKS TITLE AND LIST ON MIDDLE PANE */
-selectProject(pageInfo);
-
-/* CURRENT ISSUES: 
-    NEED DELETE BUTTON FOR PROJECTS AND DELETE BUTTON FOR TASKs
+/* CURRENT ISSUES
 */
